@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>미로 생성 알고리즘 테스트</title>
+    <style>
+        #maze {
+            display: grid;
+            grid-template-columns: repeat(30, 20px);
+            grid-template-rows: repeat(30, 20px);
+            gap: 1px;
+            background-color: #ccc;
+            padding: 1px;
+            width: fit-content;
+        }
+        .cell {
+            width: 20px;
+            height: 20px;
+        }
+        .wall { background-color: black; }
+        .path { background-color: white; }
+        .start { background-color: green; }
+        .end { background-color: red; }
+        #controls {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>미로 생성 알고리즘 테스트</h1>
+    <div id="controls">
+        <button onclick="generateAndDisplayMaze()">새 미로 생성</button>
+    </div>
+    <div id="maze"></div>
+
+    <script>
+        const GRID_SIZE = 30;
+        const CELL_SIZE = 20;
+
+        function generateMaze(width, height) {
+            const maze = Array(height).fill().map(() => Array(width).fill(1));
+            const stack = [];
+            const start = {x: 0, y: height - 1};
+            const end = {x: width - 1, y: 0};
+            
+            function carve(x, y) {
+                maze[y][x] = 0;
+                const directions = [{x: 1, y: 0}, {x: -1, y: 0}, {x: 0, y: 1}, {x: 0, y: -1}];
+                directions.sort(() => Math.random() - 0.5);
+                
+                for (let dir of directions) {
+                    const nx = x + dir.x * 2, ny = y + dir.y * 2;
+                    if (nx >= 0 && ny >= 0 && nx < width && ny < height && maze[ny][nx] === 1) {
+                        maze[y + dir.y][x + dir.x] = 0;
+                        stack.push({x: nx, y: ny});
+                    }
+                }
+            }
+            
+            carve(start.x, start.y);
+            while (stack.length > 0) {
+                const {x, y} = stack.pop();
+                carve(x, y);
+            }
+            
+            maze[start.y][start.x] = 2; // 시작점
+            maze[end.y][end.x] = 3; // 끝점
+            
+            return maze;
+        }
+
+        function displayMaze(maze) {
+            const mazeElement = document.getElementById('maze');
+            mazeElement.innerHTML = '';
+
+            for (let y = 0; y < maze.length; y++) {
+                for (let x = 0; x < maze[y].length; x++) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('cell');
+
+                    switch (maze[y][x]) {
+                        case 0: cell.classList.add('path'); break;
+                        case 1: cell.classList.add('wall'); break;
+                        case 2: cell.classList.add('start'); break;
+                        case 3: cell.classList.add('end'); break;
+                    }
+
+                    mazeElement.appendChild(cell);
+                }
+            }
+        }
+
+        function generateAndDisplayMaze() {
+            const maze = generateMaze(GRID_SIZE, GRID_SIZE);
+            displayMaze(maze);
+        }
+
+        // 초기 미로 생성
+        generateAndDisplayMaze();
+    </script>
+</body>
+</html>

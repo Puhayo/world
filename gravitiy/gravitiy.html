@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>중력 미로 탈출 게임</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #game-container {
+            position: relative;
+            width: 600px;
+            height: 600px;
+            border: 20px solid black;
+            margin-top: 40px;
+        }
+        #player {
+            position: absolute; /* 위치 속성을 절대 위치로 설정 */
+            width: 60px; /* 크기를 40x40으로 증가 */
+            height: 60px;
+            background-image: url('pix.png'); /* 이미지 경로 설정 */
+            background-size: contain; /* 이미지가 요소 크기에 맞게 조정되도록 설정 */
+            background-position: center ; /* 이미지를 중앙에 위치 */
+            background-repeat: no-repeat; /* 이미지가 반복되지 않도록 설정 */
+            transition: transform 0.5s ease; /* 회전 애니메이션 유지 */
+            transform-origin: center center;
+        }
+        #goal {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: green;
+        }
+        .wall {
+            position: absolute;
+            background-color: #333;
+        }
+        #controls {
+            position: relative;
+            width: 150px;
+            height: 100px;
+            margin: 20px auto;
+        }
+        .gravity-button {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #up-button {
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        #left-button {
+            top: 80px;
+            left: calc(50% - 80px);
+            transform: translateX(-50%);
+        }
+        #down-button {
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        #right-button {
+            top: 80px;
+            left: calc(50% + 80px);
+            transform: translateX(-50%);
+        }
+        #stage-title {
+            position: absolute;
+            top: -80px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 36px;
+            font-weight: bold;
+            color: #333;
+        }
+        #game-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #stage-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 600px;
+            margin-bottom: 40px;
+        }
+        .stage-button {
+            margin: 5px;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            flex: 0 0 calc(20% - 10px);
+        }
+        .particle {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: particle-animation 1s forwards;
+        }
+
+        @keyframes particle-animation {
+            0% {
+                transform: translate(0, 0);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--x), var(--y));
+                opacity: 0;
+            }
+        }
+
+        .player {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            left: 50%;
+            top: 50%;
+            transform-origin: center bottom !important;
+            transform: translate(-50%, -50%) scale(1);
+            transition: transform 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-area">
+        <div id="stage-buttons">
+            <!-- 스테이지 버튼은 여기에 추가됩니다 -->
+        </div>
+        <div id="game-container">
+            <div id="stage-title">Stage 1</div>
+            <div id="player"></div>
+            <div id="goal"></div>
+            <!-- 미로 벽은 여기에 추가됩니다 -->
+        </div>
+    </div>
+    <div id="controls">
+        <button id="up-button" class="gravity-button" onclick="changeGravity('up')">위(W)</button>
+        <button id="left-button" class="gravity-button" onclick="changeGravity('left')">왼쪽(A)</button>
+        <button id="down-button" class="gravity-button" onclick="changeGravity('down')">아래(S)</button>
+        <button id="right-button" class="gravity-button" onclick="changeGravity('right')">오른쪽(D)</button>
+    </div>
+    <script>
+        const player = document.getElementById('player');
+        const goal = document.getElementById('goal');
+        const gameContainer = document.getElementById('game-container');
+
+        const gameWidth = 600;
+        const gameHeight = 600;
+        const playerWidth = 60;
+        const playerHeight = 60;
+
+        let currentGravity = 'down';
+        let playerVelocity = { x: 0, y: 0 };
+        let isJumping = false;
+        let canJump = true;
+        let lastJumpTime = 0;
+        const jumpCooldown = 500; // 점프 쿨다운 시간 (밀리초)
+        const gravity = 0.8; // 중력 강도 증가
+        const jumpForce = 10;
+        let isOnGround = true;
+        const moveSpeed = 5;
+        const maxFallSpeed = 10; // 최대 낙하 속도 설정
+        let lastMoveTime = 0;
+        const moveDelay = 200; // 연속 이동 사이의 지연 시간 (밀리초)
+        let keyState = {
+            ArrowLeft: false,
+            ArrowRight: false,
+            ArrowUp: false,
+            ArrowDown: false,
+            KeyW: false,
+            KeyA: false,
+            KeyS: false,
+            KeyD: false
+        };
+
+        const stages = [
+            // 스테이지 1
+            [
+                { x: 100, y: 0, width: 20, height: 400 },
+                { x: 100, y: 500, width: 420, height: 20 },
+                { x: 500, y: 100, width: 100, height: 20 },
+                { x: 200, y: 100, width: 20, height: 300 },
+                { x: 300, y: 200, width: 200, height: 20 },
+                { x: 400, y: 200, width: 20, height: 200 },
+                { x: 500, y: 100, width: 20, height: 400 },
+            ],
+            // 스테이지 2
+            [
+                { x: 0, y: 100, width: 500, height: 20 },
+                { x: 100, y: 200, width: 20, height: 300 },
+                { x: 200, y: 300, width: 400, height: 20 },
+                { x: 300, y: 0, width: 20, height: 200 },
+                { x: 400, y: 400, width: 20, height: 200 },
+            ],
+            // 스테이지 3
+            [
+                { x: 0, y: 200, width: 400, height: 20 },
+                { x: 200, y: 0, width: 20, height: 400 },
+                { x: 300, y: 300, width: 300, height: 20 },
+                { x: 400, y: 100, width: 20, height: 500 },
+                { x: 500, y: 0, width: 20, height: 200 },
+            ],
+            // 스테이지 4
+            [
+                { x: 100, y: 100, width: 400, height: 20 },
+                { x: 100, y: 100, width: 20, height: 400 },
+                { x: 300, y: 200, width: 20, height: 400 },
+                { x: 400, y: 300, width: 200, height: 20 },
+                { x: 500, y: 0, width: 20, height: 200 },
+            ],
+            // 스테이지 5
+            [
+                { x: 0, y: 300, width: 500, height: 20 },
+                { x: 200, y: 0, width: 20, height: 200 },
+                { x: 300, y: 400, width: 20, height: 200 },
+                { x: 400, y: 100, width: 200, height: 20 },
+                { x: 500, y: 200, width: 20, height: 300 },
+            ],
+            // 스테이지 6
+            [
+                { x: 100, y: 0, width: 20, height: 500 },
+                { x: 200, y: 100, width: 300, height: 20 },
+                { x: 300, y: 200, width: 20, height: 300 },
+                { x: 400, y: 300, width: 200, height: 20 },
+                { x: 500, y: 400, width: 20, height: 200 },
+            ],
+            // 스테이지 7
+            [
+                { x: 0, y: 200, width: 400, height: 20 },
+                { x: 200, y: 300, width: 20, height: 300 },
+                { x: 300, y: 0, width: 20, height: 400 },
+                { x: 400, y: 100, width: 200, height: 20 },
+                { x: 500, y: 200, width: 20, height: 400 },
+            ],
+            // 스테이지 8
+            [
+                { x: 100, y: 100, width: 400, height: 20 },
+                { x: 100, y: 200, width: 20, height: 300 },
+                { x: 200, y: 300, width: 300, height: 20 },
+                { x: 400, y: 0, width: 20, height: 200 },
+                { x: 500, y: 400, width: 20, height: 200 },
+            ],
+            // 스테이지 9
+            [
+                { x: 0, y: 300, width: 500, height: 20 },
+                { x: 200, y: 100, width: 20, height: 400 },
+                { x: 300, y: 0, width: 20, height: 200 },
+                { x: 400, y: 200, width: 200, height: 20 },
+                { x: 500, y: 300, width: 20, height: 300 },
+            ],
+            // 스테이지 10
+            [
+                { x: 100, y: 0, width: 20, height: 300 },
+                { x: 200, y: 200, width: 300, height: 20 },
+                { x: 300, y: 300, width: 20, height: 300 },
+                { x: 400, y: 100, width: 200, height: 20 },
+                { x: 500, y: 0, width: 20, height: 500 },
+            ],
+        ];
+
+        let currentStage = 0;
+        let walls = [];
+
+        function createStageButtons() {
+            const stageButtonsContainer = document.getElementById('stage-buttons');
+            const totalStages = stages.length;
+            const stagesPerRow = Math.ceil(totalStages / 2);
+
+            for (let i = 0; i < totalStages; i++) {
+                const button = document.createElement('button');
+                button.textContent = `스테이지 ${i + 1}`;
+                button.className = 'stage-button';
+                button.onclick = () => loadStage(i);
+                stageButtonsContainer.appendChild(button);
+
+                if (i === stagesPerRow - 1) {
+                    stageButtonsContainer.appendChild(document.createElement('br'));
+                }
+            }
+        }
+
+        function loadStage(stageIndex) {
+            currentStage = stageIndex;
+            document.getElementById('stage-title').textContent = `스테이지 ${stageIndex + 1}`;
+            
+            // 기존 벽 제거
+            const existingWalls = document.querySelectorAll('.wall');
+            existingWalls.forEach(wall => wall.remove());
+
+            // 새 테이지의 벽 생성
+            walls = stages[stageIndex];
+            createWalls();
+
+            // 플레이어와 목표 위치 설정
+            resetGame();
+            setGoalPosition();
+        }
+
+        function createWalls() {
+            walls.forEach((wall, index) => {
+                const wallElement = document.createElement('div');
+                wallElement.className = 'wall';
+                wallElement.style.left = wall.x + 'px';
+                wallElement.style.top = wall.y + 'px';
+                wallElement.style.width = wall.width + 'px';
+                wallElement.style.height = wall.height + 'px';
+                gameContainer.appendChild(wallElement);
+            });
+        }
+
+        function checkWallCollision() {
+            const playerLeft = parseFloat(player.style.left);
+            const playerTop = parseFloat(player.style.top);
+            const playerRight = playerLeft + playerWidth;
+            const playerBottom = playerTop + playerHeight;
+
+            for (const wall of walls) {
+                if (playerRight > wall.x && playerLeft < wall.x + wall.width &&
+                    playerBottom > wall.y && playerTop < wall.y + wall.height) {
+                    // 충돌 발생
+                    const overlapLeft = playerRight - wall.x;
+                    const overlapRight = wall.x + wall.width - playerLeft;
+                    const overlapTop = playerBottom - wall.y;
+                    const overlapBottom = wall.y + wall.height - playerTop;
+
+                    // 가장 작은 겹침을 찾아 그 방향으로 밀어냄
+                    const minOverlap = Math.min(overlapLeft, overlapRight, overlapTop, overlapBottom);
+
+                    if (minOverlap === overlapLeft) {
+                        player.style.left = (wall.x - playerWidth) + 'px';
+                        playerVelocity.x = 0;
+                    } else if (minOverlap === overlapRight) {
+                        player.style.left = (wall.x + wall.width) + 'px';
+                        playerVelocity.x = 0;
+                    } else if (minOverlap === overlapTop) {
+                        player.style.top = (wall.y - playerHeight) + 'px';
+                        playerVelocity.y = 0;
+                    } else if (minOverlap === overlapBottom) {
+                        player.style.top = (wall.y + wall.height) + 'px';
+                        playerVelocity.y = 0;
+                    }
+                }
+            }
+        }
+
+        function checkCollision() {
+            const playerLeft = parseFloat(player.style.left);
+            const playerTop = parseFloat(player.style.top);
+            const playerRight = playerLeft + playerWidth;
+            const playerBottom = playerTop + playerHeight;
+
+            let wasOnGround = isOnGround;
+            isOnGround = false;
+
+            if (playerLeft <= 0) {
+                player.style.left = '0px';
+                playerVelocity.x = 0;
+                if (currentGravity === 'left') {
+                    isJumping = false;
+                    canJump = true;
+                    isOnGround = true;
+                }
+            } else if (playerRight >= gameWidth) {
+                player.style.left = (gameWidth - playerWidth) + 'px';
+                playerVelocity.x = 0;
+                if (currentGravity === 'right') {
+                    isJumping = false;
+                    canJump = true;
+                    isOnGround = true;
+                }
+            }
+
+            if (playerTop <= 0) {
+                player.style.top = '0px';
+                playerVelocity.y = 0;
+                if (currentGravity === 'up') {
+                    isJumping = false;
+                    canJump = true;
+                    isOnGround = true;
+                }
+            } else if (playerBottom >= gameHeight) {
+                player.style.top = (gameHeight - playerHeight) + 'px';
+                playerVelocity.y = 0;
+                if (currentGravity === 'down') {
+                    isJumping = false;
+                    canJump = true;
+                    isOnGround = true;
+                }
+            }
+
+            checkWallCollision();
+
+            // 바닥에 닿았을 때 입자 효과 생성
+            if (!wasOnGround && isOnGround) {
+                createParticles();
+            }
+        }
+
+        function update() {
+            if (currentGravity === 'left') {
+                playerVelocity.x = Math.max(playerVelocity.x - gravity, -maxFallSpeed);
+            } else if (currentGravity === 'right') {
+                playerVelocity.x = Math.min(playerVelocity.x + gravity, maxFallSpeed);
+            } else if (currentGravity === 'up') {
+                playerVelocity.y = Math.max(playerVelocity.y - gravity, -maxFallSpeed);
+            } else if (currentGravity === 'down') {
+                playerVelocity.y = Math.min(playerVelocity.y + gravity, maxFallSpeed);
+            }
+
+            player.style.left = (parseFloat(player.style.left) + playerVelocity.x) + 'px';
+            player.style.top = (parseFloat(player.style.top) + playerVelocity.y) + 'px';
+
+            checkCollision();
+            checkGoalCollision(); // 목표 충돌 확인 추가
+
+            requestAnimationFrame(update);
+        }
+
+        function handleKeyDown(event) {
+            const currentTime = Date.now();
+            if (currentTime - lastMoveTime < moveDelay) return;
+
+            if (keyState[event.code]) return;
+
+            keyState[event.code] = true;
+            lastMoveTime = currentTime;
+
+            switch (event.code) {
+                case 'ArrowLeft':
+                case 'KeyA':
+                    playerVelocity.x = -moveSpeed;
+                    break;
+                case 'ArrowRight':
+                case 'KeyD':
+                    playerVelocity.x = moveSpeed;
+                    break;
+                case 'ArrowUp':
+                case 'KeyW':
+                    playerVelocity.y = -moveSpeed;
+                    break;
+                case 'ArrowDown':
+                case 'KeyS':
+                    playerVelocity.y = moveSpeed;
+                    break;
+            }
+
+            // WASD 키로 중력 변경
+            switch (event.code) {
+                case 'KeyW':
+                    changeGravity('up');
+                    break;
+                case 'KeyA':
+                    changeGravity('left');
+                    break;
+                case 'KeyS':
+                    changeGravity('down');
+                    break;
+                case 'KeyD':
+                    changeGravity('right');
+                    break;
+            }
+        }
+
+        function handleKeyUp(event) {
+            keyState[event.code] = false;
+
+            switch (event.code) {
+                case 'ArrowLeft':
+                case 'KeyA':
+                    if (playerVelocity.x < 0) playerVelocity.x = 0;
+                    break;
+                case 'ArrowRight':
+                case 'KeyD':
+                    if (playerVelocity.x > 0) playerVelocity.x = 0;
+                    break;
+                case 'ArrowUp':
+                case 'KeyW':
+                    if (playerVelocity.y < 0) playerVelocity.y = 0;
+                    break;
+                case 'ArrowDown':
+                case 'KeyS':
+                    if (playerVelocity.y > 0) playerVelocity.y = 0;
+                    break;
+            }
+        }
+
+        function resetGame() {
+            player.style.left = '10px';
+            player.style.top = (gameHeight - playerHeight - 10) + 'px';
+            playerVelocity = { x: 0, y: 0 };
+            changeGravity('down');
+        }
+
+        function createParticles() {
+            const particleCount = 20;
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                const angle = Math.random() * 2 * Math.PI;
+                const distance = Math.random() * 50;
+                particle.style.setProperty('--x', `${Math.cos(angle) * distance}px`);
+                particle.style.setProperty('--y', `${Math.sin(angle) * distance}px`);
+                particle.style.left = `${parseFloat(player.style.left) + playerWidth / 2}px`;
+                particle.style.top = `${parseFloat(player.style.top) + playerHeight / 2}px`;
+                gameContainer.appendChild(particle);
+
+                // 일정 시간 후 입자 제거
+                setTimeout(() => {
+                    particle.remove();
+                }, 1000);
+            }
+        }
+
+        function changeGravity(direction) {
+            currentGravity = direction;
+            playerVelocity.x = 0;
+            playerVelocity.y = 0;
+            gameContainer.style.borderColor = 'black';
+
+            let rotation = 0;
+            if (direction === 'left') {
+                gameContainer.style.borderLeftColor = 'green';
+                rotation = 90;
+            } else if (direction === 'right') {
+                gameContainer.style.borderRightColor = 'green';
+                rotation = -90;
+            } else if (direction === 'up') {
+                gameContainer.style.borderTopColor = 'green';
+                rotation = 180;
+            } else if (direction === 'down') {
+                gameContainer.style.borderBottomColor = 'green';
+                rotation = 0;
+            }
+            
+            // 이미지 회전
+            player.style.transform = `rotate(${rotation}deg)`;
+        }
+
+        function setGoalPosition() {
+            // 각 스테이지마다 다른 목표 위치 설정
+            const goalPositions = [
+                { x: 570, y: 10 },
+                { x: 570, y: 570 },
+                { x: 10, y: 10 },
+                { x: 570, y: 10 },
+                { x: 10, y: 570 },
+                // 나머지 스테이지��� 대한 목표 위치 추가
+            ];
+
+            const position = goalPositions[currentStage];
+            goal.style.left = `${position.x}px`;
+            goal.style.top = `${position.y}px`;
+        }
+
+        function checkGoalCollision() {
+            const playerRect = player.getBoundingClientRect();
+            const goalRect = goal.getBoundingClientRect();
+
+            if (playerRect.left < goalRect.right &&
+                playerRect.right > goalRect.left &&
+                playerRect.top < goalRect.bottom &&
+                playerRect.bottom > goalRect.top) {
+                // 목표에 도달했을 때
+                if (currentStage < stages.length - 1) {
+                    loadStage(currentStage + 1);
+                } else {
+                    alert('축하합니다! 모든 스테이지를 클리어하셨습니다!');
+                    loadStage(0); // 처음 스테이지로 돌아가기
+                }
+            }
+        }
+
+        createStageButtons();
+        loadStage(0);
+        update();
+
+        document.addEventListener('keydown', handleKeyDown);
+        document.addEventListener('keyup', handleKeyUp);
+
+        goal.style.left = '570px';
+        goal.style.top = '10px';
+    </script>
+</body>
+</html>
