@@ -31,9 +31,12 @@
         }
         #goal {
             position: absolute;
-            width: 20px;
-            height: 20px;
-            background-color: green;
+            width: 40px;  /* 이미지 크기에 맞게 조정 */
+            height: 40px;
+            background-image: url('goal.png');  /* 이미지 경로 설정 */
+            background-size: contain;  /* 이미지가 요소에 맞게 조정되도록 설정 */
+            background-position: center;  /* 이미지를 중앙에 위치 */
+            background-repeat: no-repeat;  /* 이미지 반복 방지 */
         }
         .wall {
             position: absolute;
@@ -132,6 +135,15 @@
             transform: translate(-50%, -50%) scale(1);
             transition: transform 0.3s ease;
         }
+        #portal1, #portal2 {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background-image: url('portal.png');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
     </style>
 </head>
 <body>
@@ -143,6 +155,8 @@
             <div id="stage-title">Stage 1</div>
             <div id="player"></div>
             <div id="goal"></div>
+            <div id="portal1" style="display: none;"></div>
+            <div id="portal2" style="display: none;"></div>
             <!-- 미로 벽은 여기에 추가됩니다 -->
         </div>
     </div>
@@ -274,6 +288,11 @@
         let currentStage = 0;
         let walls = [];
 
+        // 전역 변수 추가
+        let portalCooldown = false;
+        const portal1 = document.getElementById('portal1');
+        const portal2 = document.getElementById('portal2');
+
         function createStageButtons() {
             const stageButtonsContainer = document.getElementById('stage-buttons');
             const totalStages = stages.length;
@@ -300,7 +319,19 @@
             const existingWalls = document.querySelectorAll('.wall');
             existingWalls.forEach(wall => wall.remove());
 
-            // 새 테이지의 벽 생성
+            // 포탈 표시/숨김 처리
+            portal1.style.display = stageIndex === 1 ? 'block' : 'none';
+            portal2.style.display = stageIndex === 1 ? 'block' : 'none';
+
+            if (stageIndex === 1) {
+                // 스테이지 2의 포탈 위치 설정
+                portal1.style.left = '100px';
+                portal1.style.top = '50px';
+                portal2.style.left = '500px';
+                portal2.style.top = '20px';
+            }
+
+            // 새 스테이지의 벽 생성
             walls = stages[stageIndex];
             createWalls();
 
@@ -409,6 +440,41 @@
             }
         }
 
+        function checkPortalCollision() {
+            if (currentStage !== 1 || portalCooldown) return;
+
+            const playerRect = player.getBoundingClientRect();
+            const portal1Rect = portal1.getBoundingClientRect();
+            const portal2Rect = portal2.getBoundingClientRect();
+
+            if (isColliding(playerRect, portal1Rect)) {
+                teleportPlayer(portal2);
+            } else if (isColliding(playerRect, portal2Rect)) {
+                teleportPlayer(portal1);
+            }
+        }
+
+        function isColliding(rect1, rect2) {
+            return rect1.left < rect2.right &&
+                   rect1.right > rect2.left &&
+                   rect1.top < rect2.bottom &&
+                   rect1.bottom > rect2.top;
+        }
+
+        function teleportPlayer(targetPortal) {
+            const targetX = parseFloat(targetPortal.style.left);
+            const targetY = parseFloat(targetPortal.style.top);
+            
+            player.style.left = targetX + 'px';
+            player.style.top = targetY + 'px';
+            
+            // 포탈 쿨다운 설정
+            portalCooldown = true;
+            setTimeout(() => {
+                portalCooldown = false;
+            }, 2000);
+        }
+
         function update() {
             if (currentGravity === 'left') {
                 playerVelocity.x = Math.max(playerVelocity.x - gravity, -maxFallSpeed);
@@ -424,7 +490,8 @@
             player.style.top = (parseFloat(player.style.top) + playerVelocity.y) + 'px';
 
             checkCollision();
-            checkGoalCollision(); // 목표 충돌 확인 추가
+            checkGoalCollision();
+            checkPortalCollision(); // 포탈 충돌 체크 추가
 
             requestAnimationFrame(update);
         }
@@ -552,12 +619,16 @@
         function setGoalPosition() {
             // 각 스테이지마다 다른 목표 위치 설정
             const goalPositions = [
-                { x: 570, y: 10 },
-                { x: 570, y: 570 },
-                { x: 10, y: 10 },
-                { x: 570, y: 10 },
-                { x: 10, y: 570 },
-                // 나머지 스테이지��� 대한 목표 위치 추가
+                { x: 520, y: 10 }, //1번 스테이지
+                { x: 570, y: 570 }, //2번 스테이지
+                { x: 10, y: 10 }, //3번 스테이지    
+                { x: 570, y: 10 }, //4번 스테이지
+                { x: 10, y: 570 }, //5번 스테이지
+                { x: 520, y: 10 }, //6번 스테이지
+                { x: 570, y: 570 }, //7번 스테이지
+                { x: 10, y: 10 }, //8번 스테이지
+                { x: 570, y: 10 }, //9번 스테이지   
+                { x: 10, y: 570 }, //10번 스테이지
             ];
 
             const position = goalPositions[currentStage];
@@ -590,8 +661,8 @@
         document.addEventListener('keydown', handleKeyDown);
         document.addEventListener('keyup', handleKeyUp);
 
-        goal.style.left = '570px';
-        goal.style.top = '10px';
+        //goal.style.left = '570px';
+        //goal.style.top = '10px';
     </script>
 </body>
 </html>
