@@ -141,6 +141,9 @@
             startButton.style.display = 'inline';
             restartButton.style.display = 'none';
             difficultySelect.style.display = 'inline';
+            countdownElement.textContent = ''; // 카운트다운 텍스트 제거
+            timeBarFill.style.width = '100%'; // 타임바 초기화
+            timeBarFill.style.backgroundColor = 'green'; // 타임바 색상 초기화
         }
 
         function startGameTimer() {
