@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>중력 미로 탈출 게임</title>
     <link rel="icon" type="image/png" href="icon.png">
     <style>
@@ -290,6 +291,129 @@
         #light-overlay.active ~ .wall.dark-wall {
             opacity: 0.9;  /* 조명 아래에서만 보이게 */
         }
+
+        #audio-controls {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(125px, 445px); /* 게임 맵 위쪽으로 이동 */
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        #mute-button {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        #volume-slider {
+            width: 82px;
+            cursor: pointer;
+        }
+
+        #volume-value {
+            min-width: 42px;
+        }
+
+        #user-info {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-330px, 457px); /* 게임 맵 위쪽으로 이동 */
+            background-color: rgba(255, 255, 255, 1);
+            padding: 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 1000;
+            font-size: 16px;
+        }
+
+        #logout-button {
+            padding: 5px 10px;
+            background-color: #ff4444;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #logout-button:hover {
+            background-color: #cc0000;
+        }
+
+        #game-review {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(350px, -100px);
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 5px;
+            width: 250px;
+            z-index: 1000;
+        }
+
+        #game-review h3 {
+            margin: 0 0 15px 0;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .star-rating {
+            margin-bottom: 15px;
+        }
+
+        .star {
+            color: #ddd;
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .star.active {
+            color: #ffd700;
+        }
+
+        #rating-value {
+            margin-left: 10px;
+            font-size: 14px;
+        }
+
+        #review-text {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 10px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: none;
+        }
+
+        #submit-review {
+            width: 100%;
+            padding: 8px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #submit-review:hover {
+            background-color: #45a049;
+        }
     </style>
 </head>
 <body>
@@ -357,7 +481,36 @@
             <button id="down-button" class="gravity-button" onclick="changeGravity('down')">아래(S)</button>
             <button id="right-button" class="gravity-button" onclick="changeGravity('right')">오른쪽(D)</button>
         </div>
+        <div id="audio-controls">
+            <button id="mute-button">🔊</button>
+            <input type="range" id="volume-slider" min="0" max="100" value="50">
+            <span id="volume-value">50%</span>
+        </div>
+        <div id="user-info">
+            <span id="student-info">학번: </span>
+            <button id="logout-button">로그아웃</button>
+        </div>
+        <div id="game-review">
+            <h3>게임 평가하기 (익명)</h3>
+            <div class="star-rating">
+                <span class="star" data-rating="1">★</span>
+                <span class="star" data-rating="2">★</span>
+                <span class="star" data-rating="3">★</span>
+                <span class="star" data-rating="4">★</span>
+                <span class="star" data-rating="5">★</span>
+                <span id="rating-value">0점</span>
+            </div>
+            <textarea id="review-text" placeholder="게임 후기를 남겨주세요              (익명으로 등록됩니다)" maxlength="200"></textarea>
+            <button id="submit-review">후기 남기기</button>
+        </div>
     </div>
+    <audio id="bgm-1" loop src="music/1s.mp3"></audio>
+    <audio id="bgm-2" loop src="music/2s.mp3"></audio>
+    <audio id="bgm-3" loop src="music/3s.mp3"></audio>
+    <audio id="bgm-4" loop src="music/4s.mp3"></audio>
+    <audio id="bgm-5" loop src="music/5s.mp3"></audio>
+    <audio id="bgm-6" loop src="music/6s.mp3"></audio>
+    <audio id="bgm-7" loop src="music/7s.mp3"></audio>
     <script>
         const player = document.getElementById('player');
         const goal = document.getElementById('goal');
@@ -561,7 +714,7 @@
                     startX: 200, endX: 500,  // x축 이동 범위
                     startY: 400, endY: 400,  // y축 이동 범위 (수평 이동만)
                     speed: 2,  // 이동 속도
-                    direction: 1  // 1: 오른쪽/아래로, -1: 왼쪽/위로
+                    direction: 1  // 1: 른쪽/아래로, -1: 왼쪽/위로
                 },
                 {
                     x: 400, y: 0, width: 20, height: 100,  // 초기 위치와 크기
@@ -575,6 +728,33 @@
 
         // 전역 변수로 overlay 요소 참조 추가
         const lightOverlay = document.getElementById('light-overlay');
+
+        // 전역 변수 추가
+        let currentBgm = null;
+        let isMuted = false;
+        const bgmElements = {};
+        let volume = 0.1; // 기본 볼륨 50%
+
+        function initializeUserInfo() {
+            const studentId = localStorage.getItem('studentId');
+            
+            if (!studentId) {
+                // 로그인되지 않은 경우 로그인 페이지로 리다이렉트
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // 학번 표시
+            const studentInfoElement = document.getElementById('student-info');
+            studentInfoElement.textContent = `학번: ${studentId}`;
+
+            // 로그아웃 버튼 이벤트 리스너
+            const logoutButton = document.getElementById('logout-button');
+            logoutButton.addEventListener('click', () => {
+                localStorage.removeItem('studentId');
+                window.location.href = 'login.html';
+            });
+        }
 
         function createStageButtons() {
             const stageButtonsContainer = document.getElementById('stage-buttons');
@@ -595,8 +775,71 @@
         }
 
         function loadStage(stageIndex) {
+            // 기존 BGM 정지
+            if (currentBgm) {
+                currentBgm.pause();
+                currentBgm.currentTime = 0;
+            }
+
+            // 새로운 BGM 시작 (스테이지 8 이상은 제외)
+            if (stageIndex < 7) {
+                currentBgm = bgmElements[stageIndex + 1];
+                if (currentBgm) {
+                    currentBgm.volume = isMuted ? 0 : volume;
+                    currentBgm.play().catch(error => console.log("BGM 재생 실패:", error));
+                }
+            }
+
             currentStage = stageIndex;
             document.getElementById('stage-title').textContent = `스테이지 ${stageIndex + 1}`;
+            
+            // 스이지 8, 9, 10에 대한 처리
+            if (stageIndex >= 7) {  // 인덱스는 0부터 시작하므로 7,8,9가 스테이지 8,9,10
+                const messages = {
+                    7: "스테이지 8: 준비중입니다!",
+                    8: "스테이지 9: 곧 만나요!",
+                    9: "스테이지 10: 기대해주세요!"
+                };
+                
+                // 게임 컨테이너 내부 요소들 숨기기
+                player.style.display = 'none';
+                goal.style.display = 'none';
+                
+                // 기존 벽 제거
+                const existingWalls = document.querySelectorAll('.wall');
+                existingWalls.forEach(wall => wall.remove());
+                
+                // 메시지 표시를 위한 div 생성 또는 업데이트
+                let messageDiv = document.getElementById('stage-message');
+                if (!messageDiv) {
+                    messageDiv = document.createElement('div');
+                    messageDiv.id = 'stage-message';
+                    messageDiv.style.cssText = `
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        font-size: 24px;
+                        font-weight: bold;
+                        text-align: center;
+                        color: #333;
+                    `;
+                    gameContainer.appendChild(messageDiv);
+                }
+                messageDiv.textContent = messages[stageIndex];
+                
+                return; // 여기서 함수 종료
+            }
+            
+            // 메시지 div 제거 (다른 스테이지로 이동할 때)
+            const messageDiv = document.getElementById('stage-message');
+            if (messageDiv) {
+                messageDiv.remove();
+            }
+            
+            // 플레이어와 목표 지점 다시 표시
+            player.style.display = 'block';
+            goal.style.display = 'block';
             
             // 배경 이미지 변경
             const bgElement = document.getElementById('background-image');
@@ -679,12 +922,12 @@
                 portal4.style.left = '220px';
                 portal4.style.top = '540px';
 
-                portal5.style.left = '175px'; /* 두번째  원점*/
+                portal5.style.left = '175px'; /* 두째  원점*/
                 portal5.style.top = '540px';
                 portal6.style.left = '20px';
                 portal6.style.top = '540px';
 
-                portal7.style.left = '305px'; /* 세번째 */
+                portal7.style.left = '305px'; /* 번째 */
                 portal7.style.top = '540px';
                 portal8.style.left = '450px';
                 portal8.style.top = '540px';
@@ -1045,7 +1288,7 @@
         }
 
         function updateMovingPlatforms() {
-            if (currentStage !== 2) return;  // 스테이지 3에서만 실행
+            if (currentStage !== 2) return;  // 스테이지 3서만 실행
 
             const platforms = document.querySelectorAll('.moving-platform');
             movingPlatforms[2].forEach((platformData, index) => {
@@ -1099,7 +1342,7 @@
 
         // 조명 위치 업데이트 함수
         function updateLightPosition() {
-            if (currentStage !== 3 && currentStage !== 5) return;  // 스테이지 4와 6에서만 실행
+            if (currentStage !== 3 && currentStage !== 5) return;  // 스테이지 4 또는 6에서만 실행
             
             const x = parseFloat(player.style.left) + (playerWidth / 2);
             const y = parseFloat(player.style.top) + (playerHeight / 2);
@@ -1326,6 +1569,115 @@
             }
         }
 
+        // 초기화 코드 (createStageButtons() 호출 전에 추가)
+        function initializeAudio() {
+            // BGM 요소들 저장
+            for (let i = 1; i <= 7; i++) {
+                bgmElements[i] = document.getElementById(`bgm-${i}`);
+                bgmElements[i].volume = volume;
+            }
+
+            // 볼륨 컨트롤 이벤트 리스너
+            const volumeSlider = document.getElementById('volume-slider');
+            const volumeValue = document.getElementById('volume-value');
+            const muteButton = document.getElementById('mute-button');
+
+            volumeSlider.addEventListener('input', (e) => {
+                volume = e.target.value / 100;
+                volumeValue.textContent = `${e.target.value}%`;
+                
+                if (!isMuted) {
+                    Object.values(bgmElements).forEach(audio => {
+                        audio.volume = volume;
+                    });
+                }
+            });
+
+            muteButton.addEventListener('click', () => {
+                isMuted = !isMuted;
+                muteButton.textContent = isMuted ? '🔇' : '🔊';
+                
+                Object.values(bgmElements).forEach(audio => {
+                    audio.volume = isMuted ? 0 : volume;
+                });
+            });
+        }
+
+        function initializeReviewSystem() {
+            const stars = document.querySelectorAll('.star');
+            const ratingValue = document.getElementById('rating-value');
+            const submitButton = document.getElementById('submit-review');
+            const reviewText = document.getElementById('review-text');
+            let currentRating = 0;
+
+            // 별점 시스템
+            stars.forEach(star => {
+                star.addEventListener('mouseover', () => {
+                    const rating = parseInt(star.dataset.rating);
+                    highlightStars(rating);
+                });
+
+                star.addEventListener('mouseout', () => {
+                    highlightStars(currentRating);
+                });
+
+                star.addEventListener('click', () => {
+                    currentRating = parseInt(star.dataset.rating);
+                    ratingValue.textContent = `${currentRating}점`;
+                    highlightStars(currentRating);
+                });
+            });
+
+            function highlightStars(rating) {
+                stars.forEach(star => {
+                    const starRating = parseInt(star.dataset.rating);
+                    star.classList.toggle('active', starRating <= rating);
+                });
+            }
+
+            // 후기 제출
+            submitButton.addEventListener('click', async () => {
+                if (currentRating === 0) {
+                    alert('별점을 선택해주세요!');
+                    return;
+                }
+
+                if (!reviewText.value.trim()) {
+                    alert('후기를 작성해주세요!');
+                    return;
+                }
+
+                try {
+                    const response = await fetch('https://script.google.com/macros/s/AKfycbyUKeIf0S-tTQYwJCchUROJbJS4dEMLZxBGKuzodpe-1cuabZSSTmPF9VUy0LM7aNk/exec', {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: {
+                            'Content-Type': 'text/plain;charset=utf-8',
+                        },
+                        body: JSON.stringify({
+                            rating: currentRating,
+                            review: reviewText.value,
+                            timestamp: new Date().toISOString()
+                        })
+                    });
+
+                    alert('후기가 등록되었습니다. 감사합니다!');
+                    currentRating = 0;
+                    reviewText.value = '';
+                    ratingValue.textContent = '0점';
+                    highlightStars(0);
+
+                } catch (error) {
+                    console.error('후기 제출 오류:', error);
+                    alert('후기 등록에 실패했습니다. 다시 시도해주세요.');
+                }
+            });
+        }
+
+        // 초기화 코드에 추가
+        initializeUserInfo();
+        initializeAudio();
+        initializeReviewSystem();
         createStageButtons();
         loadStage(0);
         update();
@@ -1335,12 +1687,50 @@
 
         //goal.style.left = '570px';
         //goal.style.top = '10px';
+
+        let sessionStartTime = Date.now();
+
+        // 이벤트 로깅 함수
+        async function logEvent(eventType, eventDetail) {
+            const studentId = localStorage.getItem('studentId');
+            const sessionTime = (Date.now() - sessionStartTime) / 1000; // 초 단위로 변환
+
+            try {
+                await fetch('https://script.google.com/macros/s/AKfycbzMUuR7N90UM9PqjczwnDoYVqKHwrjXUjmvDQJ-4iSODIjCIq-fetYVfUCqt4rUE95AVw/exec', {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'text/plain;charset=utf-8',
+                    },
+                    body: JSON.stringify({
+                        studentId: studentId,
+                        eventType: eventType,
+                        eventDetail: eventDetail,
+                        sessionTime: sessionTime
+                    })
+                });
+            } catch (error) {
+                console.error('로깅 오류:', error);
+            }
+        }
+
+        // 마우스 클릭 이벤트 리스너
+        document.addEventListener('click', (e) => {
+            logEvent('click', `x: ${e.clientX}, y: ${e.clientY}`);
+        });
+
+        // 키보드 이벤트 리스너
+        document.addEventListener('keydown', (e) => {
+            logEvent('keypress', e.key);
+        });
+
+        // 페이지 종료 시 최종 세션 시간 기록
+        window.addEventListener('beforeunload', () => {
+            logEvent('session_end', '페이지 종료');
+        });
     </script>
 </body>
 </html>
-
-
-
 
 
 
