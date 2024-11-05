@@ -587,7 +587,7 @@
                 { x: 500, y: 200, width: 20, height: 400 },
                 { x: 0, y: 500, width: 220, height: 20 },
             ],
-            // 스테이지 5
+            // 스테이��� 5
             [
                 { x: 0, y: 300, width: 400, height: 20 },
                 { x: 200, y: 0, width: 20, height: 200 },
@@ -793,7 +793,7 @@
             currentStage = stageIndex;
             document.getElementById('stage-title').textContent = `스테이지 ${stageIndex + 1}`;
             
-            // 스이지 8, 9, 10에 대한 처리
+            // 스테이지 8, 9, 10에 대한 처리
             if (stageIndex >= 7) {  // 인덱스는 0부터 시작하므로 7,8,9가 스테이지 8,9,10
                 const messages = {
                     7: "스테이지 8: 준비중입니다!",
@@ -804,6 +804,11 @@
                 // 게임 컨테이너 내부 요소들 숨기기
                 player.style.display = 'none';
                 goal.style.display = 'none';
+                
+                // 모든 포탈 숨기기
+                for(let i = 1; i <= 44; i++) {
+                    document.getElementById(`portal${i}`).style.display = 'none';
+                }
                 
                 // 기존 벽 제거
                 const existingWalls = document.querySelectorAll('.wall');
@@ -829,6 +834,43 @@
                 messageDiv.textContent = messages[stageIndex];
                 
                 return; // 여기서 함수 종료
+            }
+
+            // 7스테이지 포탈 처리 개선
+            if (stageIndex === 6) { // 스테이지 7
+                // 먼저 모든 포탈 숨기기
+                for(let i = 1; i <= 44; i++) {
+                    document.getElementById(`portal${i}`).style.display = 'none';
+                }
+
+                // 필요한 포탈만 표시
+                const portalsToShow = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 
+                                     17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 
+                                     30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 
+                                     43, 44];
+                
+                portalsToShow.forEach(num => {
+                    const portal = document.getElementById(`portal${num}`);
+                    if (portal) {
+                        portal.style.display = 'block';
+                    }
+                });
+            } else if (stageIndex === 1) { // 스테이지 2
+                // 모든 포탈 숨기기
+                for(let i = 1; i <= 44; i++) {
+                    document.getElementById(`portal${i}`).style.display = 'none';
+                }
+
+                // 스테이지 2의 포탈만 표시
+                const portal1 = document.getElementById('portal1');
+                const portal2 = document.getElementById('portal2');
+                if (portal1) portal1.style.display = 'block';
+                if (portal2) portal2.style.display = 'block';
+            } else {
+                // 다른 스테이지에서는 모든 포탈 숨기기
+                for(let i = 1; i <= 44; i++) {
+                    document.getElementById(`portal${i}`).style.display = 'none';
+                }
             }
             
             // 메시지 div 제거 (다른 스테이지로 이동할 때)
