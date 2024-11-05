@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>중력 미로 탈출 게임</title>
+    <link rel="icon" type="image/png" href="icon.png">
     <style>
         body {
             display: flex;
@@ -10,6 +11,8 @@
             justify-content: center;
             height: 100vh;
             margin: 0;
+            background-color: rgb(220, 219, 219); /* 페이지 전체 배경을 하얀색으로 설정 */
+
         }
         #game-container {
             position: relative;
@@ -17,6 +20,8 @@
             height: 600px;
             border: 20px solid black;
             margin-top: 40px;
+            background-color: white; /* 게임 컨테이너 배경을 하얀색으로 설정 */
+            z-index: 2; /* 배경 이미지보다 위에 오도록 z-index 증가 */
         }
         #player {
             position: absolute; /* 위치 속성을 절대 위치로 설정 */
@@ -47,6 +52,7 @@
             width: 150px;
             height: 100px;
             margin: 20px auto;
+            z-index: 2; /* 배경 이미지보다 위에 오도록 설정 */
         }
         .gravity-button {
             position: absolute;
@@ -84,11 +90,14 @@
             font-size: 36px;
             font-weight: bold;
             color: #333;
+            z-index: 2; /* 배경 이미지보다 위에 오도록 설정 */
         }
         #game-area {
             display: flex;
             flex-direction: column;
             align-items: center;
+            position: relative;
+            z-index: 2; /* 배경 이미지보다 위에 오도록 설정 */
         }
         #stage-buttons {
             display: flex;
@@ -96,6 +105,8 @@
             justify-content: center;
             max-width: 600px;
             margin-bottom: 40px;
+            position: relative;
+            z-index: 2; /* 배경 이미지보다 위에 오도록 설정 */
         }
         .stage-button {
             margin: 5px;
@@ -135,7 +146,7 @@
             transform: translate(-50%, -50%) scale(1);
             transition: transform 0.3s ease;
         }
-        #portal1, #portal2 {
+        #portal1, #portal2, #portal3, #portal5, #portal7, #portal9, #portal11, #portal13, #portal15, #portal17, #portal19, #portal21, #portal23, #portal25 {
             position: absolute;
             width: 40px;
             height: 40px;
@@ -144,27 +155,208 @@
             background-position: center;
             background-repeat: no-repeat;
         }
+        #portal27, #portal29, #portal31, #portal33, #portal35, #portal37, #portal39, #portal41, #portal43 {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background-image: url('portal.png');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        #portal4, #portal6, #portal8, #portal10, #portal12, #portal14, #portal16, #portal18, #portal20, #portal22, #portal24, #portal26 {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background-image: url('portal.png');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0; /* 투명도 추가 */
+        }
+        #portal28, #portal30, #portal32, #portal34, #portal36, #portal38, #portal40, #portal42, #portal44 {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background-image: url('portal.png');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0; /* 투명도 추가 */
+        }
+        #background-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 0; /* 모든 UI 요소보다 아래에 위치 */
+        }
+        #background-image.stage-bg-1 {
+            background-image: url('./background/1.png');
+        }
+        #background-image.stage-bg-2 {
+            background-image: url('./background/2.png');
+        }
+        #background-image.stage-bg-3 {
+            background-image: url('./background/3.png');
+        }
+        #background-image.stage-bg-4 {
+            background-image: url('./background/4.png');
+        }
+        #background-image.stage-bg-5 {
+            background-image: url('./background/5.png');
+        }
+        #background-image.stage-bg-6 {
+            background-image: url('./background/6.png');
+        }
+        #background-image.stage-bg-7 {
+            background-image: url('./background/7.png');
+        }
+        #background-image.stage-bg-8 {
+            background-image: url('./background/8.png');
+        }
+        #background-image.stage-bg-9 {
+            background-image: url('./background/9.png');
+        }
+        #background-image.stage-bg-10 {
+            background-image: url('./background/10.png');
+        }
+        /* 새로운 메인 컨테이너 스타일 */
+        #main-container {
+            background-color: rgba(216, 210, 210, 0.6); /* 투명도 0.8 추가 */
+            padding: 20px 20px 60px 20px; /* 아래쪽 패딩만 40px로 늘림 */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 2;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        /* 다른 요소들의 z-index는 제거해도 됩니다 (이미 컨테이너가 처리함) */
+        #game-area, #stage-buttons, #controls, #stage-title {
+            position: relative;
+        }
+
+        /* 스테이지 5의 레드존 스타일 */
+        .danger-zone {
+            position: absolute;
+            background-color: rgba(255, 0, 0, 1);  /* 반투명한 빨간색 */
+            pointer-events: none;
+        }
+
+        /* 스테이지 6의 레드존 스타일 (조명 효과 적용) */
+        .dark-danger-zone {
+            position: absolute;
+            background-color: rgba(255, 0, 0, 1);  /* 반투명한 빨간색 */
+            pointer-events: none;
+            transition: opacity 0.3s, background-color 0.3s;  /* 색상 전환도 부드럽게 */
+        }
+
+        .moving-platform {
+            position: absolute;
+            background-color: #001aff;  /*  벽보다 약간 밝은 색상 */
+        }
+        #light-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #333;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        #light-overlay.active {
+            opacity: 1;  /* 어두운 정도 조절 (0: 투명 ~ 1: 완전 검정) */
+            mask-image: radial-gradient(circle at center, transparent 30px, #333 50px);
+            -webkit-mask-image: radial-gradient(circle at center, transparent 30px, #333 50px);
+        }
+
+        /* 스테이지 4의 벽을 위한 특별한 스타일 */
+        .wall.dark-wall {
+            background-color: #333;
+            opacity: 0;  /* 완전히 투명하게 설정 */
+            transition: opacity 0.3s;
+        }
+
+        /* 조명이 비출 때 벽이 보이게 함 */
+        #light-overlay.active ~ .wall.dark-wall {
+            opacity: 0.9;  /* 조명 아래에서만 보이게 */
+        }
     </style>
 </head>
 <body>
-    <div id="game-area">
-        <div id="stage-buttons">
-            <!-- 스테이지 버튼은 여기에 추가됩니다 -->
+    <div id="background-image"></div>
+    <div id="main-container">
+        <div id="game-area">
+            <div id="stage-buttons">
+                <!-- 스테이지 버튼은 여기에 추가됩니다 -->
+            </div>
+            <div id="game-container">
+                <div id="stage-title">Stage 1</div>
+                <div id="player"></div>
+                <div id="goal"></div>
+                <div id="portal1" style="display: none;"></div>
+                <div id="portal2" style="display: none;"></div>
+                <div id="portal3" style="display: none;"></div>
+                <div id="portal4" style="display: none;"></div>
+                <div id="portal5" style="display: none;"></div>
+                <div id="portal6" style="display: none;"></div>
+                <div id="portal7" style="display: none;"></div>
+                <div id="portal8" style="display: none;"></div>
+                <div id="portal9" style="display: none;"></div>
+                <div id="portal10" style="display: none;"></div>
+                <div id="portal11" style="display: none;"></div>
+                <div id="portal12" style="display: none;"></div>
+                <div id="portal13" style="display: none;"></div>    
+                <div id="portal14" style="display: none;"></div>
+                <div id="portal15" style="display: none;"></div>
+                <div id="portal16" style="display: none;"></div>
+                <div id="portal17" style="display: none;"></div>
+                <div id="portal18" style="display: none;"></div>
+                <div id="portal19" style="display: none;"></div>
+                <div id="portal20" style="display: none;"></div>
+                <div id="portal21" style="display: none;"></div>
+                <div id="portal22" style="display: none;"></div>
+                <div id="portal23" style="display: none;"></div>
+                <div id="portal24" style="display: none;"></div>
+                <div id="portal25" style="display: none;"></div>
+                <div id="portal26" style="display: none;"></div>    
+                <div id="portal27" style="display: none;"></div>
+                <div id="portal28" style="display: none;"></div>
+                <div id="portal29" style="display: none;"></div>
+                <div id="portal30" style="display: none;"></div>
+                <div id="portal31" style="display: none;"></div>
+                <div id="portal32" style="display: none;"></div>
+                <div id="portal33" style="display: none;"></div>
+                <div id="portal34" style="display: none;"></div>
+                <div id="portal35" style="display: none;"></div>
+                <div id="portal36" style="display: none;"></div>
+                <div id="portal37" style="display: none;"></div>
+                <div id="portal38" style="display: none;"></div>
+                <div id="portal39" style="display: none;"></div>
+                <div id="portal40" style="display: none;"></div>
+                <div id="portal41" style="display: none;"></div>
+                <div id="portal42" style="display: none;"></div>
+                <div id="portal43" style="display: none;"></div>
+                <div id="portal44" style="display: none;"></div>
+                
+                <div id="light-overlay"></div>
+            </div>
         </div>
-        <div id="game-container">
-            <div id="stage-title">Stage 1</div>
-            <div id="player"></div>
-            <div id="goal"></div>
-            <div id="portal1" style="display: none;"></div>
-            <div id="portal2" style="display: none;"></div>
-            <!-- 미로 벽은 여기에 추가됩니다 -->
+        <div id="controls">
+            <button id="up-button" class="gravity-button" onclick="changeGravity('up')">위(W)</button>
+            <button id="left-button" class="gravity-button" onclick="changeGravity('left')">왼쪽(A)</button>
+            <button id="down-button" class="gravity-button" onclick="changeGravity('down')">아래(S)</button>
+            <button id="right-button" class="gravity-button" onclick="changeGravity('right')">오른쪽(D)</button>
         </div>
-    </div>
-    <div id="controls">
-        <button id="up-button" class="gravity-button" onclick="changeGravity('up')">위(W)</button>
-        <button id="left-button" class="gravity-button" onclick="changeGravity('left')">왼쪽(A)</button>
-        <button id="down-button" class="gravity-button" onclick="changeGravity('down')">아래(S)</button>
-        <button id="right-button" class="gravity-button" onclick="changeGravity('right')">오른쪽(D)</button>
     </div>
     <script>
         const player = document.getElementById('player');
@@ -222,42 +414,49 @@
             // 스테이지 3
             [
                 { x: 0, y: 200, width: 400, height: 20 },
-                { x: 200, y: 0, width: 20, height: 400 },
+                { x: 200, y: 100, width: 20, height: 220 },
                 { x: 300, y: 300, width: 300, height: 20 },
-                { x: 400, y: 100, width: 20, height: 500 },
                 { x: 500, y: 0, width: 20, height: 200 },
             ],
             // 스테이지 4
             [
-                { x: 100, y: 100, width: 400, height: 20 },
-                { x: 100, y: 100, width: 20, height: 400 },
-                { x: 300, y: 200, width: 20, height: 400 },
-                { x: 400, y: 300, width: 200, height: 20 },
-                { x: 500, y: 0, width: 20, height: 200 },
+                { x: 100, y: 100, width: 20, height: 200 },
+                { x: 100, y: 300, width: 100, height: 20 },
+                { x: 100, y: 400, width: 20, height: 100 },
+                { x: 100, y: 100, width: 200, height: 20 },
+                { x: 200, y: 400, width: 20, height: 100 },
+                { x: 200, y: 200, width: 100, height: 20 },
+                { x: 300, y: 100, width: 20, height: 400 },
+                { x: 300, y: 400, width: 120, height: 20 },
+                { x: 400, y: 100, width: 20, height: 300 },
+                { x: 400, y: 500, width: 20, height: 100 },
+                { x: 400, y: 100, width: 200, height: 20 },
+                { x: 500, y: 200, width: 20, height: 400 },
+                { x: 0, y: 500, width: 220, height: 20 },
             ],
             // 스테이지 5
             [
-                { x: 0, y: 300, width: 500, height: 20 },
+                { x: 0, y: 300, width: 400, height: 20 },
                 { x: 200, y: 0, width: 20, height: 200 },
                 { x: 300, y: 400, width: 20, height: 200 },
-                { x: 400, y: 100, width: 200, height: 20 },
-                { x: 500, y: 200, width: 20, height: 300 },
             ],
             // 스테이지 6
             [
-                { x: 100, y: 0, width: 20, height: 500 },
-                { x: 200, y: 100, width: 300, height: 20 },
-                { x: 300, y: 200, width: 20, height: 300 },
-                { x: 400, y: 300, width: 200, height: 20 },
+                { x: 100, y: 0, width: 20, height: 400 },
+                { x: 300, y: 100, width: 300, height: 20 },
+                { x: 300, y: 300, width: 20, height: 200 },
+                { x: 300, y: 300, width: 300, height: 20 },
                 { x: 500, y: 400, width: 20, height: 200 },
             ],
             // 스테이지 7
             [
-                { x: 0, y: 200, width: 400, height: 20 },
-                { x: 200, y: 300, width: 20, height: 300 },
-                { x: 300, y: 0, width: 20, height: 400 },
+                { x: 0, y: 100, width: 600, height: 20 },
+                { x: 150, y: 300, width: 20, height: 300 },
+                { x: 0, y: 300, width: 600, height: 20 },
                 { x: 400, y: 100, width: 200, height: 20 },
-                { x: 500, y: 200, width: 20, height: 400 },
+                { x: 0, y: 500, width: 600, height: 20 },
+                { x: 350, y: 100, width: 20, height: 500 },
+                { x: 200, y: 0, width: 20, height: 100 },
             ],
             // 스테이지 8
             [
@@ -292,6 +491,90 @@
         let portalCooldown = false;
         const portal1 = document.getElementById('portal1');
         const portal2 = document.getElementById('portal2');
+        const portal3 = document.getElementById('portal3');
+        const portal4 = document.getElementById('portal4');
+        const portal5 = document.getElementById('portal5');
+        const portal6 = document.getElementById('portal6');
+        const portal7 = document.getElementById('portal7');
+        const portal8 = document.getElementById('portal8');
+        const portal9 = document.getElementById('portal9');
+        const portal10 = document.getElementById('portal10');
+        const portal11 = document.getElementById('portal11');
+        const portal12 = document.getElementById('portal12');
+        const portal13 = document.getElementById('portal13');
+        const portal14 = document.getElementById('portal14');
+        const portal15 = document.getElementById('portal15');
+        const portal16 = document.getElementById('portal16');
+        const portal17 = document.getElementById('portal17');
+        const portal18 = document.getElementById('portal18');
+        const portal19 = document.getElementById('portal19');
+        const portal20 = document.getElementById('portal20');
+        const portal21 = document.getElementById('portal21');
+        const portal22 = document.getElementById('portal22');
+        const portal23 = document.getElementById('portal23');
+        const portal24 = document.getElementById('portal24');
+        const portal25 = document.getElementById('portal25');
+        const portal26 = document.getElementById('portal26');
+        const portal27 = document.getElementById('portal27');
+        const portal28 = document.getElementById('portal28');
+        const portal29 = document.getElementById('portal29');
+        const portal30 = document.getElementById('portal30');
+        const portal31 = document.getElementById('portal31');
+        const portal32 = document.getElementById('portal32');
+        const portal33 = document.getElementById('portal33');
+        const portal34 = document.getElementById('portal34');
+        const portal35 = document.getElementById('portal35');
+        const portal36 = document.getElementById('portal36');
+        const portal37 = document.getElementById('portal37');
+        const portal38 = document.getElementById('portal38');
+        const portal39 = document.getElementById('portal39');
+        const portal40 = document.getElementById('portal40');
+        const portal41 = document.getElementById('portal41');
+        const portal42 = document.getElementById('portal42');
+        const portal43 = document.getElementById('portal43');
+        const portal44 = document.getElementById('portal44');
+        
+
+        const dangerZones = {
+            4: [  // 스테이지 5의 위험 구역
+                { x: 100, y: 500, width: 200, height: 20 },
+                { x: 400, y: 300, width: 100, height: 20 },
+                { x: 500, y: 200, width: 20, height: 300 },
+                { x: 400, y: 100, width: 200, height: 20 }
+            ]
+        };
+
+        const darkDangerZones = {
+            5: [  // 스테이지 6의 위험 구역
+                { x: 100, y: 500, width: 220, height: 20 },
+                { x: 400, y: 300, width: 100, height: 20 },
+                { x: 500, y: 200, width: 20, height: 200 },
+                { x: 100, y: 200, width: 220, height: 20 },
+
+            ]
+        };
+
+        const movingPlatforms = {
+            2: [
+                {
+                    x: 200, y: 400, width: 100, height: 20,  // 초기 위치와 크기
+                    startX: 200, endX: 500,  // x축 이동 범위
+                    startY: 400, endY: 400,  // y축 이동 범위 (수평 이동만)
+                    speed: 2,  // 이동 속도
+                    direction: 1  // 1: 오른쪽/아래로, -1: 왼쪽/위로
+                },
+                {
+                    x: 400, y: 0, width: 20, height: 100,  // 초기 위치와 크기
+                    startX: 300, endX: 300,  // x축 이동 범위 (수직 이동만)
+                    startY: 0, endY: 200,  // y축 이동 범위
+                    speed: 2,  // 이동 속도
+                    direction: 1  // 1: 오른쪽/아래로, -1: 왼쪽/위로
+                }
+            ]
+        };
+
+        // 전역 변수로 overlay 요소 참조 추가
+        const lightOverlay = document.getElementById('light-overlay');
 
         function createStageButtons() {
             const stageButtonsContainer = document.getElementById('stage-buttons');
@@ -315,20 +598,189 @@
             currentStage = stageIndex;
             document.getElementById('stage-title').textContent = `스테이지 ${stageIndex + 1}`;
             
+            // 배경 이미지 변경
+            const bgElement = document.getElementById('background-image');
+            // 모든 stage-bg 클래스 제거
+            bgElement.className = '';
+            // 새로운 스테이지의 배경 클래스 추가
+            bgElement.className = `stage-bg-${stageIndex + 1}`;
+            
             // 기존 벽 제거
             const existingWalls = document.querySelectorAll('.wall');
             existingWalls.forEach(wall => wall.remove());
 
             // 포탈 표시/숨김 처리
-            portal1.style.display = stageIndex === 1 ? 'block' : 'none';
-            portal2.style.display = stageIndex === 1 ? 'block' : 'none';
+            portal1.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal2.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal3.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal4.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal5.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal6.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal7.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal8.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal9.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal10.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal11.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal12.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal13.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal14.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal15.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal16.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal17.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal18.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal19.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal20.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal21.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal22.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal23.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal24.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal25.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal26.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal27.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal28.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal29.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal30.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal31.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal32.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal33.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal34.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal35.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal36.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal37.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal38.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal39.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal40.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal41.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal42.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal43.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            portal44.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
+            
+
 
             if (stageIndex === 1) {
                 // 스테이지 2의 포탈 위치 설정
-                portal1.style.left = '100px';
+                portal1.style.left = '250px';
                 portal1.style.top = '50px';
-                portal2.style.left = '500px';
+                portal2.style.left = '540px';
                 portal2.style.top = '20px';
+                
+                // 나머지 포탈 숨기기
+                for(let i=3; i<=44; i++) {
+                    document.getElementById(`portal${i}`).style.display = 'none';
+                }
+            } else if (stageIndex === 6) {
+                // 스테이지 7의 포탈 위치 설정x
+                for(let i=1; i<=3; i++) {
+                    document.getElementById(`portal${i}`).style.display = 'none';
+                }
+
+                portal3.style.left = '100px'; /* 첫번째 */
+                portal3.style.top = '540px';
+                portal4.style.left = '220px';
+                portal4.style.top = '540px';
+
+                portal5.style.left = '175px'; /* 두번째  원점*/
+                portal5.style.top = '540px';
+                portal6.style.left = '20px';
+                portal6.style.top = '540px';
+
+                portal7.style.left = '305px'; /* 세번째 */
+                portal7.style.top = '540px';
+                portal8.style.left = '450px';
+                portal8.style.top = '540px';
+
+                portal9.style.left = '540px'; /* 네번째 */  
+                portal9.style.top = '540px';
+                portal10.style.left = '300px';
+                portal10.style.top = '440px';
+
+                portal11.style.left = '390px'; /* 다섯번째 */
+                portal11.style.top = '540px';
+                portal12.style.left = '20px';
+                portal12.style.top = '540px';
+
+                portal13.style.left = '180px'; /* 여섯번째 원점 */
+                portal13.style.top = '440px';
+                portal14.style.left = '20px';
+                portal14.style.top = '540px';
+
+                portal15.style.left = '180px'; /* 일곱번째 */
+                portal15.style.top = '340px';
+                portal16.style.left = '20px';
+                portal16.style.top = '440px';
+
+                portal17.style.left = '20px'; /* 여덟번째 원점*/
+                portal17.style.top = '340px';
+                portal18.style.left = '20px';
+                portal18.style.top = '540px';
+
+                portal19.style.left = '100px'; /* 아홉번째 */
+                portal19.style.top = '340px';
+                portal20.style.left = '540px';
+                portal20.style.top = '340px';
+
+                portal21.style.left = '540px'; /* 열번째 */
+                portal21.style.top = '440px';
+                portal22.style.left = '540px';
+                portal22.style.top = '140px';
+
+                portal23.style.left = '390px'; /* 열한번째 */
+                portal23.style.top = '440px';
+                portal24.style.left = '20px';
+                portal24.style.top = '540px';
+
+                portal25.style.left = '390px'; /* 열두번째 */
+                portal25.style.top = '340px';
+                portal26.style.left = '20px';
+                portal26.style.top = '540px';
+
+                portal27.style.left = '390px'; /* 열세번째 */
+                portal27.style.top = '140px';
+                portal28.style.left = '20px';
+                portal28.style.top = '540px';
+
+                portal29.style.left = '390px'; /* 열네번째 */
+                portal29.style.top = '240px';
+                portal30.style.left = '20px';
+                portal30.style.top = '540px';
+
+                portal31.style.left = '540px'; /* 열다섯번째 */
+                portal31.style.top = '240px';
+                portal32.style.left = '160px';
+                portal32.style.top = '190px'; /* 지금은 여기까지 */
+
+                portal33.style.left = '20px'; /* 열여섯번째 */
+                portal33.style.top = '240px';
+                portal34.style.left = '20px';
+                portal34.style.top = '540px';
+
+                portal35.style.left = '20px'; /* 열일곱번째 */
+                portal35.style.top = '140px';
+                portal36.style.left = '375px';
+                portal36.style.top = '30px';
+
+                portal37.style.left = '290px'; /* 열여덟번째 */
+                portal37.style.top = '240px';
+                portal38.style.left = '20px';
+                portal38.style.top = '540px';
+
+                portal39.style.left = '290px'; /* 열아홉번째 */
+                portal39.style.top = '140px';
+                portal40.style.left = '20px';
+                portal40.style.top = '540px';
+
+                portal41.style.left = '540px'; /* 스테이지 8 첫번째 */
+                portal41.style.top = '30px';
+                portal42.style.left = '120px';
+                portal42.style.top = '30px';
+
+                portal43.style.left = '240px'; /* 스테이지 8 두번째 */
+                portal43.style.top = '30px';
+                portal44.style.left = '20px';
+                portal44.style.top = '540px';
+
+
+
             }
 
             // 새 스테이지의 벽 생성
@@ -338,6 +790,66 @@
             // 플레이어와 목표 위치 설정
             resetGame();
             setGoalPosition();
+
+            // 기존 위험 구역 제거
+            const existingDangerZones = document.querySelectorAll('.danger-zone, .dark-danger-zone');
+            existingDangerZones.forEach(zone => zone.remove());
+            
+            // 스테이지 5의 일반 위험 구역 생성
+            if (dangerZones[stageIndex]) {
+                dangerZones[stageIndex].forEach(zone => {
+                    const dangerZone = document.createElement('div');
+                    dangerZone.className = 'danger-zone';
+                    dangerZone.style.left = zone.x + 'px';
+                    dangerZone.style.top = zone.y + 'px';
+                    dangerZone.style.width = zone.width + 'px';
+                    dangerZone.style.height = zone.height + 'px';
+                    gameContainer.appendChild(dangerZone);
+                });
+            }
+
+            // 스테이지 6의 어두운 위험 구역 생성
+            if (darkDangerZones[stageIndex]) {
+                darkDangerZones[stageIndex].forEach(zone => {
+                    const dangerZone = document.createElement('div');
+                    dangerZone.className = 'dark-danger-zone';
+                    dangerZone.style.left = zone.x + 'px';
+                    dangerZone.style.top = zone.y + 'px';
+                    dangerZone.style.width = zone.width + 'px';
+                    dangerZone.style.height = zone.height + 'px';
+                    gameContainer.appendChild(dangerZone);
+                });
+            }
+
+            // 기존 움직이는 바닥 제거
+            const existingPlatforms = document.querySelectorAll('.moving-platform');
+            existingPlatforms.forEach(platform => platform.remove());
+
+            // 해당 스테이지의 움직이는 바닥 생성
+            if (movingPlatforms[stageIndex]) {
+                movingPlatforms[stageIndex].forEach(platform => {
+                    const platformElement = document.createElement('div');
+                    platformElement.className = 'moving-platform wall';
+                    platformElement.style.left = platform.x + 'px';
+                    platformElement.style.top = platform.y + 'px';
+                    platformElement.style.width = platform.width + 'px';
+                    platformElement.style.height = platform.height + 'px';
+                    gameContainer.appendChild(platformElement);
+                });
+            }
+
+            // 조명 효과 토글 (스테이지 4와 6에 적용)
+            if (stageIndex === 3 || stageIndex === 5) {  // 스테이지 4 또는 6
+                lightOverlay.classList.add('active');
+                updateLightPosition();
+                
+                // 벽에 dark-wall 클래스 추가
+                document.querySelectorAll('.wall').forEach(wall => {
+                    wall.classList.add('dark-wall');
+                });
+            } else {
+                lightOverlay.classList.remove('active');
+            }
         }
 
         function createWalls() {
@@ -358,7 +870,22 @@
             const playerRight = playerLeft + playerWidth;
             const playerBottom = playerTop + playerHeight;
 
-            for (const wall of walls) {
+            // 일반 벽과 움직이는 벽을 모두 포함하는 배열 생성
+            let allWalls = [...walls];
+            
+            // 현재 스테이지가 3이면 움직이는 벽도 추가
+            if (currentStage === 2 && movingPlatforms[2]) {
+                movingPlatforms[2].forEach(platform => {
+                    allWalls.push({
+                        x: platform.x,
+                        y: platform.y,
+                        width: platform.width,
+                        height: platform.height
+                    });
+                });
+            }
+
+            for (const wall of allWalls) {
                 if (playerRight > wall.x && playerLeft < wall.x + wall.width &&
                     playerBottom > wall.y && playerTop < wall.y + wall.height) {
                     // 충돌 발생
@@ -367,7 +894,7 @@
                     const overlapTop = playerBottom - wall.y;
                     const overlapBottom = wall.y + wall.height - playerTop;
 
-                    // 가장 작은 겹침을 찾아 그 방향으로 밀어냄
+                    // 가장 작은 겹을 찾아 그 방향으로 밀어냄
                     const minOverlap = Math.min(overlapLeft, overlapRight, overlapTop, overlapBottom);
 
                     if (minOverlap === overlapLeft) {
@@ -441,16 +968,53 @@
         }
 
         function checkPortalCollision() {
-            if (currentStage !== 1 || portalCooldown) return;
+            if (portalCooldown) return;
 
             const playerRect = player.getBoundingClientRect();
-            const portal1Rect = portal1.getBoundingClientRect();
-            const portal2Rect = portal2.getBoundingClientRect();
+            
+            if (currentStage === 6) { // 스테이지 7
+                const portalPairs = [
+                    [portal1, portal2],
+                    [portal3, portal4],
+                    [portal5, portal6],
+                    [portal7, portal8],
+                    [portal9, portal10],
+                    [portal11, portal12],
+                    [portal13, portal14],
+                    [portal15, portal16],
+                    [portal17, portal18],
+                    [portal19, portal20],
+                    [portal21, portal22],
+                    [portal23, portal24],
+                    [portal25, portal26],
+                    [portal27, portal28],
+                    [portal29, portal30],
+                    [portal31, portal32],
+                    [portal33, portal34],
+                    [portal35, portal36],
+                    [portal37, portal38],
+                    [portal39, portal40],
+                    [portal41, portal42],
+                    [portal43, portal44]
 
-            if (isColliding(playerRect, portal1Rect)) {
-                teleportPlayer(portal2);
-            } else if (isColliding(playerRect, portal2Rect)) {
-                teleportPlayer(portal1);
+                ];
+
+                for (const [portalA, portalB] of portalPairs) {
+                    const portalARect = portalA.getBoundingClientRect();
+                    const portalBRect = portalB.getBoundingClientRect();
+
+                    if (isColliding(playerRect, portalARect)) {
+                        teleportPlayer(portalB);
+                        break;
+                    }
+                }
+            } else if (currentStage === 1) { // 스테이지 2
+                const portal1Rect = portal1.getBoundingClientRect();
+                const portal2Rect = portal2.getBoundingClientRect();
+
+                if (isColliding(playerRect, portal1Rect)) {
+                    teleportPlayer(portal2);
+                }
             }
         }
 
@@ -465,14 +1029,83 @@
             const targetX = parseFloat(targetPortal.style.left);
             const targetY = parseFloat(targetPortal.style.top);
             
-            player.style.left = targetX + 'px';
-            player.style.top = targetY + 'px';
+            // 포탈 위치에 약간의 오프셋 추가하여 더 자연스러운 이동
+            player.style.left = (targetX + 10) + 'px';
+            player.style.top = (targetY + 10) + 'px';
+            
+            // 포탈 사용시 속도 초기화
+            playerVelocity.x = 0;
+            playerVelocity.y = 0;
             
             // 포탈 쿨다운 설정
             portalCooldown = true;
             setTimeout(() => {
                 portalCooldown = false;
-            }, 2000);
+            }, 10); // 쿨다운 시간 1초로 감소
+        }
+
+        function updateMovingPlatforms() {
+            if (currentStage !== 2) return;  // 스테이지 3에서만 실행
+
+            const platforms = document.querySelectorAll('.moving-platform');
+            movingPlatforms[2].forEach((platformData, index) => {
+                const platform = platforms[index];
+                
+                // x축 이동
+                if (platformData.startX !== platformData.endX) {
+                    platformData.x += platformData.speed * platformData.direction;
+                    
+                    // x축 향 전환 체크
+                    if (platformData.x >= platformData.endX) {
+                        platformData.direction = -1;
+                    } else if (platformData.x <= platformData.startX) {
+                        platformData.direction = 1;
+                    }
+                    platform.style.left = platformData.x + 'px';
+                }
+                
+                // y축 이동
+                if (platformData.startY !== platformData.endY) {
+                    platformData.y += platformData.speed * platformData.direction;
+                    
+                    // y축 방향 전환 체크
+                    if (platformData.y >= platformData.endY) {
+                        platformData.direction = -1;
+                    } else if (platformData.y <= platformData.startY) {
+                        platformData.direction = 1;
+                    }
+                    platform.style.top = platformData.y + 'px';
+                }
+                
+                // 플레이어가 플랫폼 위에 있는지 체크
+                const playerLeft = parseFloat(player.style.left);
+                const playerBottom = parseFloat(player.style.top) + playerHeight;
+                const platformTop = platformData.y;
+                
+                if (playerBottom >= platformTop && 
+                    playerBottom <= platformTop + platformData.height &&
+                    playerLeft >= platformData.x - playerWidth &&
+                    playerLeft <= platformData.x + platformData.width) {
+                    // 플레이어를 랫폼과 함께 이동
+                    if (platformData.startX !== platformData.endX) {
+                        player.style.left = (parseFloat(player.style.left) + platformData.speed * platformData.direction) + 'px';
+                    }
+                    if (platformData.startY !== platformData.endY) {
+                        player.style.top = (platformData.y - playerHeight) + 'px';
+                    }
+                }
+            });
+        }
+
+        // 조명 위치 업데이트 함수
+        function updateLightPosition() {
+            if (currentStage !== 3 && currentStage !== 5) return;  // 스테이지 4와 6에서만 실행
+            
+            const x = parseFloat(player.style.left) + (playerWidth / 2);
+            const y = parseFloat(player.style.top) + (playerHeight / 2);
+            
+            lightOverlay.style.maskImage = `radial-gradient(circle at ${x}px ${y}px, transparent 30px, black 50px)`;
+            lightOverlay.style.webkitMaskImage = `radial-gradient(circle at ${x}px ${y}px, transparent 30px, black 50px)`;
         }
 
         function update() {
@@ -490,8 +1123,11 @@
             player.style.top = (parseFloat(player.style.top) + playerVelocity.y) + 'px';
 
             checkCollision();
+            updateMovingPlatforms();  // 움직이는 바닥 업데이트
+            checkDangerZones();
+            updateLightPosition();  // 조명 위치 업데이트 추가
             checkGoalCollision();
-            checkPortalCollision(); // 포탈 충돌 체크 추가
+            checkPortalCollision();
 
             requestAnimationFrame(update);
         }
@@ -617,18 +1253,18 @@
         }
 
         function setGoalPosition() {
-            // 각 스테이지마다 다른 목표 위치 설정
+            // 각 스테이지마다 다른 목 위 설정
             const goalPositions = [
-                { x: 520, y: 10 }, //1번 스테이지
-                { x: 570, y: 570 }, //2번 스테이지
-                { x: 10, y: 10 }, //3번 스테이지    
-                { x: 570, y: 10 }, //4번 스테이지
-                { x: 10, y: 570 }, //5번 스테이지
-                { x: 520, y: 10 }, //6번 스테이지
-                { x: 570, y: 570 }, //7번 스테이지
-                { x: 10, y: 10 }, //8번 스테이지
-                { x: 570, y: 10 }, //9번 스테이지   
-                { x: 10, y: 570 }, //10번 스테이지
+                { x: 540, y: 30 }, //1번 스테이지
+                { x: 30, y: 30 }, //2번 스테이지
+                { x: 30, y: 30 }, //3번 스테이지    
+                { x: 540, y: 30 }, //4번 스테이지
+                { x: 30, y: 30 }, //5번 스테이지
+                { x: 540, y: 30 }, //6번 스테이지
+                { x: 30, y: 30 }, //7번 스테이지
+                { x: 540, y: 30 }, //8번 스테이지
+                { x: 30, y: 30 }, //9번 스테이지   
+                { x: 540, y: 30 }, //10번 스테이지
             ];
 
             const position = goalPositions[currentStage];
@@ -654,6 +1290,42 @@
             }
         }
 
+        function checkDangerZones() {
+            // 스테이지 5와 6에서만 체크
+            if (currentStage !== 4 && currentStage !== 5) return;  
+            
+            const playerLeft = parseFloat(player.style.left);
+            const playerTop = parseFloat(player.style.top);
+            const playerRight = playerLeft + playerWidth;
+            const playerBottom = playerTop + playerHeight;
+            
+            // 스테이지 5의 일반 위험 구역 체크
+            if (currentStage === 4 && dangerZones[4]) {
+                for (const zone of dangerZones[4]) {
+                    if (playerRight > zone.x && 
+                        playerLeft < zone.x + zone.width &&
+                        playerBottom > zone.y && 
+                        playerTop < zone.y + zone.height) {
+                        resetGame();
+                        break;
+                    }
+                }
+            }
+            
+            // 스테이지 6의 어두운 위험 구역 체크
+            if (currentStage === 5 && darkDangerZones[5]) {
+                for (const zone of darkDangerZones[5]) {
+                    if (playerRight > zone.x && 
+                        playerLeft < zone.x + zone.width &&
+                        playerBottom > zone.y && 
+                        playerTop < zone.y + zone.height) {
+                        resetGame();
+                        break;
+                    }
+                }
+            }
+        }
+
         createStageButtons();
         loadStage(0);
         update();
@@ -666,3 +1338,56 @@
     </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
