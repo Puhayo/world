@@ -55,33 +55,6 @@
             margin: 20px auto;
             z-index: 2; /* 배경 이미지보다 위에 오도록 설정 */
         }
-        .gravity-button {
-            position: absolute;
-            width: 80px;
-            height: 80px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        #up-button {
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        #left-button {
-            top: 80px;
-            left: calc(50% - 80px);
-            transform: translateX(-50%);
-        }
-        #down-button {
-            top: 80px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        #right-button {
-            top: 80px;
-            left: calc(50% + 80px);
-            transform: translateX(-50%);
-        }
         #stage-title {
             position: absolute;
             top: -80px;
@@ -107,7 +80,7 @@
             max-width: 600px;
             margin-bottom: 40px;
             position: relative;
-            z-index: 2; /* 배경 이미지보다 위에 오도록 설정 */
+            z-index: 2; /* 배경 이지다 위에 오도록 설정 */
         }
         .stage-button {
             margin: 5px;
@@ -226,10 +199,10 @@
         #background-image.stage-bg-10 {
             background-image: url('./background/10.png');
         }
-        /* 새로운 메인 컨테이너 스타일 */
+        /* 새로운  컨테이너 스타일 */
         #main-container {
             background-color: rgba(216, 210, 210, 0.6); /* 투명도 0.8 추가 */
-            padding: 20px 20px 60px 20px; /* 아래쪽 패딩만 40px로 늘림 */
+            padding: 20px 20px 120px 20px; /* 아래쪽 패딩만 40px로 늘림 */
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             z-index: 2;
@@ -238,22 +211,22 @@
             flex-direction: column;
             align-items: center;
         }
-        /* 다른 요소들의 z-index는 제거해도 됩니다 (이미 컨테이너가 처리함) */
+        /*  요소들의 z-index는 제거해도 됩니다 (이미 컨테이너가 처리함) */
         #game-area, #stage-buttons, #controls, #stage-title {
             position: relative;
         }
 
-        /* 스테이지 5의 레드존 스타일 */
+        /* 스테이 5 레존 스타일 */
         .danger-zone {
             position: absolute;
-            background-color: rgba(255, 0, 0, 1);  /* 반투명한 빨간색 */
+            background-color: rgba(255, 0, 0, 1);  /* 기존 레드존 */
             pointer-events: none;
         }
 
         /* 스테이지 6의 레드존 스타일 (조명 효과 적용) */
         .dark-danger-zone {
             position: absolute;
-            background-color: rgba(255, 0, 0, 1);  /* 반투명한 빨간색 */
+            background-color: rgba(255, 0, 0, 1);  /* 반투명한 간색 */
             pointer-events: none;
             transition: opacity 0.3s, background-color 0.3s;  /* 색상 전환도 부드럽게 */
         }
@@ -280,10 +253,10 @@
             -webkit-mask-image: radial-gradient(circle at center, transparent 30px, #333 50px);
         }
 
-        /* 스테이지 4의 벽을 위한 특별한 스타일 */
+        /* 스테이지 4의 벽을 한 특별한 스타일 */
         .wall.dark-wall {
             background-color: #333;
-            opacity: 0;  /* 완전히 투명하게 설정 */
+            opacity: 0;  /* 완전 투명하게 설정 */
             transition: opacity 0.3s;
         }
 
@@ -296,7 +269,7 @@
             position: fixed;
             top: 50%;
             left: 50%;
-            transform: translate(125px, 445px); /* 게임 맵 위쪽으로 이동 */
+            transform: translate(105px, 400px); /* 게임 맵 위쪽으로 이동 */
             background-color: rgba(255, 255, 255, 0.8);
             padding: 10px;
             border-radius: 5px;
@@ -327,7 +300,7 @@
             position: fixed;
             top: 50%;
             left: 50%;
-            transform: translate(-330px, 457px); /* 게임 맵 위쪽으로 이동 */
+            transform: translate(-130px, 40px); /* 게임 맵 위쪽으로 이동 */
             background-color: rgba(255, 255, 255, 1);
             padding: 10px;
             border-radius: 5px;
@@ -356,12 +329,13 @@
             position: fixed;
             top: 50%;
             left: 50%;
-            transform: translate(350px, -100px);
+            transform: translate(350px, 180px);
             background-color: rgba(255, 255, 255, 0.9);
             padding: 20px;
             border-radius: 5px;
             width: 250px;
             z-index: 1000;
+            text-align: center;
         }
 
         #game-review h3 {
@@ -414,11 +388,269 @@
         #submit-review:hover {
             background-color: #45a049;
         }
+
+        /* 게임 설명 패널 스타일 */
+        .instructions-container {
+            text-align: center;
+
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            width: 250px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            z-index: 1000;
+            font-family: 'Arial', sans-serif;
+            transform: translate(350px, -350px);
+            padding: 20px;
+            border-radius: 5px;
+
+        }
+
+        .instructions-content {
+            padding: 20px;
+        }
+
+        .instructions-content h2 {
+            color: #3498db;
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .instruction-section {
+            margin-bottom: 20px;
+        }
+
+        .instruction-section h3 {
+            color: #e74c3c;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .instruction-section ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .instruction-section li {
+            margin-bottom: 10px;
+            font-size: 16px;
+            line-height: 1.4;
+            padding: 5px 10px;
+            background-color: #ffffff;
+            border-radius: 5px;
+            transition: all 0.2s ease;
+        }
+
+        /* 스테이지 10용 어두운 레드존 스타일 추가 */
+        .dark-danger-zone-10 {
+            position: absolute;
+            background-color: rgb(255, 0, 0);  
+            pointer-events: none;
+            opacity: 1;  /* 기본적으�� 투명 */
+            transition: opacity 0.3s ease;  /* 부드러운 페이드 효과 */
+        }
+
+        /* 중력 반응형 블록 스타일 */
+        .gravity-block {
+            position: absolute;
+            background-color: #8A2BE2 !important;
+            pointer-events: none;
+            z-index: 1;
+            /* 부드러운 움직임을 위한 transition 제거 */
+            transition: none;
+        }
+
+        #survey-block {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-300px, 400px); /* user-info 아래에 위치하도록 조정 */
+            background-color: rgba(255, 255, 255, 1);
+            padding: 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        #survey-link {
+            padding: 8px 15px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        #survey-link:hover {
+            background-color: #45a049;
+        }
+
+        #survey-link i {
+            font-size: 18px;
+        }
+
+        /* 통합된 컨트롤 박스 스타일 수정 */
+        #integrated-controls {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, 550%); /* 박스의 중심이 기준점이 되도록 수정 */
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 15px 25px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            width: auto;
+        }
+
+        /* 기존 스타일 수정 */
+        #user-info, #audio-controls, #survey-block {
+            position: static;
+            transform: none;
+            background-color: transparent;
+            padding: 0;
+            margin: 0;
+            border-radius: 0;
+        }
+
+        /* 구분선 스타일 유지 */
+        .control-divider {
+            width: 1px;
+            height: 30px;
+            background-color: #ddd;
+            margin: 0 10px; /* 여백 약간 증가 */
+        }
+
+        /* 설문조사 링크 스타일 수정 */
+        #survey-link {
+            padding: 8px 15px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: background-color 0.3s;
+            white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+        }
+
+        .clear-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            z-index: 2000;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.5s ease-in;
+            min-width: 300px;
+        }
+
+        .clear-message h2 {
+            color: #4CAF50;
+            font-size: 28px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .clear-message p {
+            color: #333;
+            font-size: 16px;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .clear-message button {
+            margin-top: 10px;
+            padding: 12px 25px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+
+        .clear-message button:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(0,0,0,0.2);
+        }
     </style>
 </head>
 <body>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-analytics.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+      
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+          apiKey: "AIzaSyDrwv8GrSacKk1B2yrJkz1oX7GUQhfWDh8",
+          authDomain: "test-d13ce.firebaseapp.com", 
+          projectId: "test-d13ce",
+          storageBucket: "test-d13ce.firebasestorage.app",
+          messagingSenderId: "12340326841",
+          appId: "1:12340326841:web:b72bf64fb4e5ff92690668",
+          measurementId: "G-JQHF3XC6S0"
+        };
+      
+        // Initialize Firebase 파이어베이스 설정해보기
+        try {
+            const app = initializeApp(firebaseConfig);
+            const analytics = getAnalytics(app);
+            console.log('Firebase가 성공적으로 초기화되었습니다.');
+            console.log('앱 정보:', app);
+            console.log('애널리틱스 정보:', analytics);
+        } catch (error) {
+            console.error('Firebase 초기화 중 오류 발생:', error);
+        }
+      </script>
     <div id="background-image"></div>
     <div id="main-container">
+        <!-- 게임 컨테이너 앞에 추가 -->
+        <div id="game-instructions" class="instructions-container">
+            <div class="instructions-content">
+                <h2>게임 설명</h2>
+                <div class="instruction-section">
+                    <h3>기본 조작</h3>
+                    <ul>
+                        <li>← → : 좌우 이동</li>
+                        <li>↑   ↓ : 상하 이동</li>
+                        <li>WASD : 중력 방향 변경</li>
+                    </ul>
+                </div>
+                <div class="instruction-section">
+                    <h3>게임 규칙</h3>
+                    <ul>
+                        <li>중력을 이용해</li>
+                        <li>미로를 풀면서</li>
+                        <li>블랙홀까지 도달하세요!</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
         <div id="game-area">
             <div id="stage-buttons">
                 <!-- 스테이지 버튼은 여기에 추가됩니다 -->
@@ -475,20 +707,27 @@
                 <div id="light-overlay"></div>
             </div>
         </div>
-        <div id="controls">
-            <button id="up-button" class="gravity-button" onclick="changeGravity('up')">위(W)</button>
-            <button id="left-button" class="gravity-button" onclick="changeGravity('left')">왼쪽(A)</button>
-            <button id="down-button" class="gravity-button" onclick="changeGravity('down')">아래(S)</button>
-            <button id="right-button" class="gravity-button" onclick="changeGravity('right')">오른쪽(D)</button>
-        </div>
-        <div id="audio-controls">
-            <button id="mute-button">🔊</button>
-            <input type="range" id="volume-slider" min="0" max="100" value="50">
-            <span id="volume-value">50%</span>
-        </div>
-        <div id="user-info">
-            <span id="student-info">학번: </span>
-            <button id="logout-button">로그아웃</button>
+        <div id="integrated-controls">
+            <div id="survey-block">
+                <a id="survey-link" href="https://forms.gle/sY2HgETKMgFW6iGp8" target="_blank">
+                    게임 설문조사
+                </a>
+            </div>
+            
+            <div class="control-divider"></div>
+            
+            <div id="user-info">
+                <span id="student-info">학번: </span>
+                <button id="logout-button">로그아웃</button>
+            </div>
+            
+            <div class="control-divider"></div>
+            
+            <div id="audio-controls">
+                <button id="mute-button">🔊</button>
+                <input type="range" id="volume-slider" min="0" max="100" value="50">
+                <span id="volume-value">50%</span>
+            </div>
         </div>
         <div id="game-review">
             <h3>게임 평가하기 (익명)</h3>
@@ -511,6 +750,9 @@
     <audio id="bgm-5" loop src="music/5s.mp3"></audio>
     <audio id="bgm-6" loop src="music/6s.mp3"></audio>
     <audio id="bgm-7" loop src="music/7s.mp3"></audio>
+    <audio id="bgm-8" loop src="music/8s.mp3"></audio>
+    <audio id="bgm-9" loop src="music/9s.mp3"></audio>
+    <audio id="bgm-10" loop src="music/10s.mp3"></audio>
     <script>
         const player = document.getElementById('player');
         const goal = document.getElementById('goal');
@@ -526,7 +768,7 @@
         let isJumping = false;
         let canJump = true;
         let lastJumpTime = 0;
-        const jumpCooldown = 500; // 점프 쿨다운 시간 (밀리초)
+        const jumpCooldown = 500; // 점프 쿨다운 간 (밀리초)
         const gravity = 0.8; // 중력 강도 증가
         const jumpForce = 10;
         let isOnGround = true;
@@ -566,10 +808,16 @@
             ],
             // 스테이지 3
             [
-                { x: 0, y: 200, width: 400, height: 20 },
-                { x: 200, y: 100, width: 20, height: 220 },
-                { x: 300, y: 300, width: 300, height: 20 },
-                { x: 500, y: 0, width: 20, height: 200 },
+                { x: 0, y: 300, width: 520, height: 20 },
+                { x: 200, y: 0, width: 20, height: 200 },
+                { x: 200, y: 300, width: 20, height: 200 },
+
+                { x: 300, y: 400, width: 300, height: 20 },
+                { x: 500, y: 200, width: 20, height: 100 },
+                { x: 300, y: 80, width: 200, height: 20 },
+                { x: 300, y: 0, width: 20, height: 200 },
+
+
             ],
             // 스테이지 4
             [
@@ -587,7 +835,7 @@
                 { x: 500, y: 200, width: 20, height: 400 },
                 { x: 0, y: 500, width: 220, height: 20 },
             ],
-            // 스테이��� 5
+            // 스테이 5
             [
                 { x: 0, y: 300, width: 400, height: 20 },
                 { x: 200, y: 0, width: 20, height: 200 },
@@ -613,34 +861,60 @@
             ],
             // 스테이지 8
             [
-                { x: 100, y: 100, width: 400, height: 20 },
+                
+                { x: 100, y: 200, width: 20, height: 400 },
+                { x: 100, y: 500, width: 300, height: 20 },
+                { x: 300, y: 100, width: 300, height: 20 },
+                { x: 200, y: 100, width: 20, height: 320 },
+                { x: 400, y: 200, width: 100, height: 20 },
+                { x: 400, y: 200, width: 20, height: 100 },
+                { x: 500, y: 200, width: 20, height: 200 },
+                { x: 0, y: 100, width: 200, height: 20 },
                 { x: 100, y: 200, width: 20, height: 300 },
                 { x: 200, y: 300, width: 300, height: 20 },
-                { x: 400, y: 0, width: 20, height: 200 },
-                { x: 500, y: 400, width: 20, height: 200 },
+                { x: 300, y: 100, width: 20, height: 100 },
+                { x: 400, y: 400, width: 20, height: 200 },
+                { x: 300, y: 400, width: 100, height: 20 },
+                
             ],
             // 스테이지 9
             [
                 { x: 0, y: 300, width: 500, height: 20 },
                 { x: 200, y: 100, width: 20, height: 400 },
-                { x: 300, y: 0, width: 20, height: 200 },
-                { x: 400, y: 200, width: 200, height: 20 },
-                { x: 500, y: 300, width: 20, height: 300 },
+                { x: 300, y: 0, width: 20, height: 220 },
+                { x: 500, y: 100, width: 100, height: 20 },
+                { x: 500, y: 300, width: 20, height: 200 },
+                { x: 0, y: 500, width: 100, height: 20 },
+                { x: 300, y: 500, width: 100, height: 20 },
+                { x: 100, y: 300, width: 20, height: 100 },
+                { x: 300, y: 500, width: 20, height: 100 },
+                { x: 400, y: 300, width: 20, height: 100 },
+                { x: 400, y: 400, width: 100, height: 20 },
+                { x: 400, y: 220, width: 20, height: 100 },
+
+
             ],
             // 스테이지 10
             [
                 { x: 100, y: 0, width: 20, height: 300 },
+                { x: 100, y: 400, width: 20, height: 200 },
                 { x: 200, y: 200, width: 300, height: 20 },
-                { x: 300, y: 300, width: 20, height: 300 },
-                { x: 400, y: 100, width: 200, height: 20 },
-                { x: 500, y: 0, width: 20, height: 500 },
+                { x: 300, y: 300, width: 20, height: 200 },
+                { x: 400, y: 200, width: 20, height: 300 },
+                { x: 500, y: 200, width: 20, height: 100 },
+                { x: 500, y: 400, width: 20, height: 200 },
+                { x: 200, y: 400, width: 200, height: 20 },
+                { x: 500, y: 100, width: 100, height: 20 },
+                { x: 300, y: 100, width: 100, height: 20 },
+
+                
             ],
         ];
 
         let currentStage = 0;
         let walls = [];
 
-        // 전역 변수 추가
+        // 전역 변수 가
         let portalCooldown = false;
         const portal1 = document.getElementById('portal1');
         const portal2 = document.getElementById('portal2');
@@ -688,20 +962,28 @@
         const portal44 = document.getElementById('portal44');
         
 
+        // dangerZones 객체에 10스테이(index 9)의 위 구역 추가
         const dangerZones = {
             4: [  // 스테이지 5의 위험 구역
                 { x: 100, y: 500, width: 200, height: 20 },
                 { x: 400, y: 300, width: 100, height: 20 },
                 { x: 500, y: 200, width: 20, height: 300 },
                 { x: 400, y: 100, width: 200, height: 20 }
+            ],
+            9: [  // 스테이지 10의 위험 구역
+                { x: 120, y: 200, width: 180, height: 20 },
+                { x: 300, y: 400, width: 20, height: 100 },
+                { x: 400, y: 100, width: 100, height: 20 },
+                { x: 200, y: 500, width: 200, height: 20 },
+                { x: 150, y: 50, width: 20, height: 150 },
+                { x: 350, y: 250, width: 150, height: 20 }
             ]
         };
 
         const darkDangerZones = {
             5: [  // 스테이지 6의 위험 구역
                 { x: 100, y: 500, width: 220, height: 20 },
-                { x: 400, y: 300, width: 100, height: 20 },
-                { x: 500, y: 200, width: 20, height: 200 },
+                { x: 500, y: 300, width: 20, height: 100 },
                 { x: 100, y: 200, width: 220, height: 20 },
 
             ]
@@ -710,20 +992,28 @@
         const movingPlatforms = {
             2: [
                 {
-                    x: 200, y: 400, width: 100, height: 20,  // 초기 위치와 크기
-                    startX: 200, endX: 500,  // x축 이동 범위
-                    startY: 400, endY: 400,  // y축 이동 범위 (수평 이동만)
-                    speed: 2,  // 이동 속도
-                    direction: 1  // 1: 른쪽/아래로, -1: 왼쪽/위로
+                    x: 0, y: 500, width: 500, height: 20,  // 초기 위치와 크기 
+                    startX: 0, endX: 100,  // x축 이동 범위
+                    startY: 500, endY: 500,  // y 이동 범위 (수평 이동만)
+                    speed: 1,  // 이동 속도
+                    direction: 1  // 1: 오른쪽/아래로, -1: 왼쪽/위로
                 },
                 {
-                    x: 400, y: 0, width: 20, height: 100,  // 초기 위치와 크기
-                    startX: 300, endX: 300,  // x축 이동 범위 (수직 이동만)
-                    startY: 0, endY: 200,  // y축 이동 범위
-                    speed: 2,  // 이동 속도
+                    x: 400, y: 100, width: 20, height: 220,  // 초기 위치와 크기
+                    startX: 400, endX: 400,  // x축 이동 범위 (직 이동만)
+                    startY: 100, endY: 180,  // y축 이동 범위
+                    speed: 1,  // 이동 속도
+                    direction: 1  // 1: 오른쪽/아래로, -1: 왼쪽/위로
+                },
+                {
+                    x: 0, y: 100, width: 100, height: 20,  // 초기 위치와 크기
+                    startX: 0, endX: 100,  // x축 이동 범위 (수직 이동만)
+                    startY: 0, endY: 0,  // y축 이동 범위
+                    speed: 1,  // 이동 속도
                     direction: 1  // 1: 오른쪽/아래로, -1: 왼쪽/위로
                 }
             ]
+            
         };
 
         // 전역 변수로 overlay 요소 참조 추가
@@ -732,27 +1022,140 @@
         // 전역 변수 추가
         let currentBgm = null;
         let isMuted = false;
-        const bgmElements = {};
-        let volume = 0.1; // 기본 볼륨 50%
+        const bgmElements = {
+            1: document.getElementById('bgm-1'),
+            2: document.getElementById('bgm-2'),
+            3: document.getElementById('bgm-3'),
+            4: document.getElementById('bgm-4'),
+            5: document.getElementById('bgm-5'),
+            6: document.getElementById('bgm-6'),
+            7: document.getElementById('bgm-7'),
+            8: document.getElementById('bgm-8'),
+            9: document.getElementById('bgm-9'),
+            10: document.getElementById('bgm-10')
+        };
+        let volumeValue = 40; // 초기 볼륨값
 
+        // 전역 변수 추가
+        let gameStartTime = Date.now();
+        let stageStartTime = Date.now();
+        let lastStageTime = 0;
+
+        // 전역 변수 추가 (다른 전역 변수들과 함께 배치)
+        let stageTimer = null;
+        let timeLimit = 30;
+
+        // HTML에 타이머 요소 추가
+        const timerDisplay = document.createElement('div');
+        timerDisplay.id = 'stage-timer';
+        timerDisplay.style.cssText = `
+            position: absolute;
+            top: -80px;
+            right: 20px;
+            font-size: 24px;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 5px 15px;
+            border-radius: 5px;
+            z-index: 100;
+            display: none;
+        `;
+        document.getElementById('game-container').appendChild(timerDisplay);
+
+        // 타이머 시작 함수
+        function startStageTimer() {
+            timerDisplay.style.display = 'block';
+            timeLimit = 30;
+            
+            if (stageTimer) clearInterval(stageTimer);
+            
+            updateTimerDisplay();
+            stageTimer = setInterval(() => {
+                timeLimit--;
+                updateTimerDisplay();
+                
+                if (timeLimit <= 0) {
+                    clearInterval(stageTimer);
+                    resetStage8();
+                }
+            }, 1000);
+        }
+
+        // 타이머 표시 업데이트
+        function updateTimerDisplay() {
+            timerDisplay.textContent = `Time: ${timeLimit}s`;
+            timerDisplay.style.color = timeLimit <= 10 ? '#ff0000' : '#fff';
+        }
+
+        // 스테이지 8 리셋 함수 수정
+        function resetStage8() {
+            gravityChangeCount = 0;  // 중력 변화 횟수 초기
+            updateGravityCounter();
+            playerVelocity = { x: 0, y: 0 };
+            currentGravity = 'down';
+            player.style.left = '20px';
+            player.style.top = '540px';
+            
+            // 중력 방향 초기화
+            gameContainer.style.borderColor = 'black';
+            gameContainer.style.borderBottomColor = 'green';
+            player.style.transform = 'rotate(0deg)';
+
+            // 타이머 재시작
+            startStageTimer();
+        }
+
+        // 이벤트 로그 기록 함수
+        async function logGameEvent(eventType, detail = '') {
+            const studentId = localStorage.getItem('studentId');
+            const currentTime = new Date().toISOString();
+            const sessionDuration = Math.floor((Date.now() - gameStartTime) / 1000); //  단위
+            const stageTime = Math.floor((Date.now() - stageStartTime) / 1000); // 초 단위
+
+            try {
+                await fetch('https://script.google.com/macros/s/AKfycbwecWl2pI3YLf0YnjcLWUxUDJF6-o7emGO3in8PJtGbzUPucqyvivEHHiMBaeBJ8XiyYQ/exec', {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'text/plain;charset=utf-8',
+                    },
+                    body: JSON.stringify({
+                        timestamp: currentTime,
+                        studentId: studentId,
+                        eventType: eventType,
+                        currentStage: currentStage + 1,
+                        sessionDuration: sessionDuration,
+                        stageTime: stageTime,
+                        detail: detail
+                    })
+                });
+            } catch (error) {
+                console.error('로그 기록 실패:', error);
+            }
+        }
+
+        // 로그인 함수 수정
         function initializeUserInfo() {
             const studentId = localStorage.getItem('studentId');
             
             if (!studentId) {
-                // 로그인되지 않은 경우 로그인 페이지로 리다이렉트
                 window.location.href = 'login.html';
                 return;
             }
 
-            // 학번 표시
+            gameStartTime = Date.now();
+            stageStartTime = Date.now();
+            logGameEvent('LOGIN');
+
             const studentInfoElement = document.getElementById('student-info');
             studentInfoElement.textContent = `학번: ${studentId}`;
 
-            // 로그아웃 버튼 이벤트 리스너
             const logoutButton = document.getElementById('logout-button');
             logoutButton.addEventListener('click', () => {
-                localStorage.removeItem('studentId');
-                window.location.href = 'login.html';
+                logGameEvent('LOGOUT').then(() => {
+                    localStorage.removeItem('studentId');
+                    window.location.href = 'login.html';
+                });
             });
         }
 
@@ -773,70 +1176,39 @@
                 }
             }
         }
+        
+        
 
+        // 페이지 최상단에 추가
+        let lastStage = 0; // 전역 변수로 마지막 스테이지 저장
+
+        // loadStage 함수 내부에 추가 (기존 코드는 유지)
         function loadStage(stageIndex) {
-            // 기존 BGM 정지
+            lastStage = stageIndex; // 현재 스테이지 저장
+            currentStage = stageIndex;
+            
+            lastStageTime = Math.floor((Date.now() - stageStartTime) / 1000);
+            logGameEvent('STAGE_CHANGE', `Stage ${currentStage + 1} -> ${stageIndex + 1}, Time spent: ${lastStageTime}s`);
+            stageStartTime = Date.now();
+            
+            // 이전 BGM 정지
             if (currentBgm) {
                 currentBgm.pause();
                 currentBgm.currentTime = 0;
             }
 
-            // 새로운 BGM 시작 (스테이지 8 이상은 제외)
-            if (stageIndex < 7) {
-                currentBgm = bgmElements[stageIndex + 1];
-                if (currentBgm) {
-                    currentBgm.volume = isMuted ? 0 : volume;
-                    currentBgm.play().catch(error => console.log("BGM 재생 실패:", error));
-                }
+            // 새로운 BGM 시작
+            const newBgm = bgmElements[stageIndex + 1];
+            if (newBgm) {
+                newBgm.volume = volumeValue / 100;
+                newBgm.muted = isMuted;
+                newBgm.play();
+                currentBgm = newBgm;
             }
 
-            currentStage = stageIndex;
             document.getElementById('stage-title').textContent = `스테이지 ${stageIndex + 1}`;
-            
-            // 스테이지 8, 9, 10에 대한 처리
-            if (stageIndex >= 7) {  // 인덱스는 0부터 시작하므로 7,8,9가 스테이지 8,9,10
-                const messages = {
-                    7: "스테이지 8: 준비중입니다!",
-                    8: "스테이지 9: 곧 만나요!",
-                    9: "스테이지 10: 기대해주세요!"
-                };
-                
-                // 게임 컨테이너 내부 요소들 숨기기
-                player.style.display = 'none';
-                goal.style.display = 'none';
-                
-                // 모든 포탈 숨기기
-                for(let i = 1; i <= 44; i++) {
-                    document.getElementById(`portal${i}`).style.display = 'none';
-                }
-                
-                // 기존 벽 제거
-                const existingWalls = document.querySelectorAll('.wall');
-                existingWalls.forEach(wall => wall.remove());
-                
-                // 메시지 표시를 위한 div 생성 또는 업데이트
-                let messageDiv = document.getElementById('stage-message');
-                if (!messageDiv) {
-                    messageDiv = document.createElement('div');
-                    messageDiv.id = 'stage-message';
-                    messageDiv.style.cssText = `
-                        position: absolute;
-                        top: 50%;
-                        left: 50%;
-                        transform: translate(-50%, -50%);
-                        font-size: 24px;
-                        font-weight: bold;
-                        text-align: center;
-                        color: #333;
-                    `;
-                    gameContainer.appendChild(messageDiv);
-                }
-                messageDiv.textContent = messages[stageIndex];
-                
-                return; // 여기서 함수 종료
-            }
 
-            // 7스테이지 포탈 처리 개선
+            // 7스테이지 포탈 리 개선
             if (stageIndex === 6) { // 스테이지 7
                 // 먼저 모든 포탈 숨기기
                 for(let i = 1; i <= 44; i++) {
@@ -885,7 +1257,7 @@
             
             // 배경 이미지 변경
             const bgElement = document.getElementById('background-image');
-            // 모든 stage-bg 클래스 제거
+            // 든 stage-bg 클래스 제거
             bgElement.className = '';
             // 새로운 스테이지의 배경 클래스 추가
             bgElement.className = `stage-bg-${stageIndex + 1}`;
@@ -941,13 +1313,12 @@
             portal44.style.display = (stageIndex === 1 || stageIndex === 6) ? 'block' : 'none';
             
 
-
             if (stageIndex === 1) {
                 // 스테이지 2의 포탈 위치 설정
-                portal1.style.left = '250px';
-                portal1.style.top = '50px';
-                portal2.style.left = '540px';
-                portal2.style.top = '20px';
+                portal2.style.left = '250px';
+                portal2.style.top = '50px';
+                portal1.style.left = '540px';
+                portal1.style.top = '20px';
                 
                 // 나머지 포탈 숨기기
                 for(let i=3; i<=44; i++) {
@@ -964,27 +1335,27 @@
                 portal4.style.left = '220px';
                 portal4.style.top = '540px';
 
-                portal5.style.left = '175px'; /* 두째  원점*/
-                portal5.style.top = '540px';
+                portal7.style.left = '175px'; /* 두째  원점*/
+                portal7.style.top = '540px';
                 portal6.style.left = '20px';
                 portal6.style.top = '540px';
 
-                portal7.style.left = '305px'; /* 번째 */
-                portal7.style.top = '540px';
+                portal5.style.left = '305px'; /* 번째 */
+                portal5.style.top = '540px';
                 portal8.style.left = '450px';
                 portal8.style.top = '540px';
 
-                portal9.style.left = '540px'; /* 네번째 */  
-                portal9.style.top = '540px';
+                portal11.style.left = '540px'; /* 네번째 */  
+                portal11.style.top = '540px';
                 portal10.style.left = '300px';
                 portal10.style.top = '440px';
 
-                portal11.style.left = '390px'; /* 다섯번째 */
-                portal11.style.top = '540px';
+                portal9.style.left = '390px'; /* 다섯번째 */
+                portal9.style.top = '540px';
                 portal12.style.left = '20px';
                 portal12.style.top = '540px';
 
-                portal13.style.left = '180px'; /* 여섯번째 원점 */
+                portal13.style.left = '180px'; /* 여섯째 원점 */
                 portal13.style.top = '440px';
                 portal14.style.left = '20px';
                 portal14.style.top = '540px';
@@ -1049,7 +1420,7 @@
                 portal38.style.left = '20px';
                 portal38.style.top = '540px';
 
-                portal39.style.left = '290px'; /* 열아홉번째 */
+                portal39.style.left = '290px'; /* 열아홉번 */
                 portal39.style.top = '140px';
                 portal40.style.left = '20px';
                 portal40.style.top = '540px';
@@ -1059,7 +1430,7 @@
                 portal42.style.left = '120px';
                 portal42.style.top = '30px';
 
-                portal43.style.left = '240px'; /* 스테이지 8 두번째 */
+                portal43.style.left = '240px'; /* 스테이지 8 두번 */
                 portal43.style.top = '30px';
                 portal44.style.left = '20px';
                 portal44.style.top = '540px';
@@ -1077,11 +1448,21 @@
             setGoalPosition();
 
             // 기존 위험 구역 제거
-            const existingDangerZones = document.querySelectorAll('.danger-zone, .dark-danger-zone');
+            const existingDangerZones = document.querySelectorAll('.danger-zone, .dark-danger-zone, .dark-danger-zone-10');
             existingDangerZones.forEach(zone => zone.remove());
             
-            // 스테이지 5의 일반 위험 구역 생성
-            if (dangerZones[stageIndex]) {
+            // 스테이지 10의 위험 구역 생성
+            if (stageIndex === 9) {  // 스테이지 10
+                dangerZones[9].forEach(zone => {
+                    const dangerZone = document.createElement('div');
+                    dangerZone.className = 'dark-danger-zone-10';
+                    dangerZone.style.left = zone.x + 'px';
+                    dangerZone.style.top = zone.y + 'px';
+                    dangerZone.style.width = zone.width + 'px';
+                    dangerZone.style.height = zone.height + 'px';
+                    gameContainer.appendChild(dangerZone);
+                });
+            } else if (dangerZones[stageIndex]) {  // 다른 스테이지
                 dangerZones[stageIndex].forEach(zone => {
                     const dangerZone = document.createElement('div');
                     dangerZone.className = 'danger-zone';
@@ -1113,27 +1494,84 @@
             // 해당 스테이지의 움직이는 바닥 생성
             if (movingPlatforms[stageIndex]) {
                 movingPlatforms[stageIndex].forEach(platform => {
-                    const platformElement = document.createElement('div');
-                    platformElement.className = 'moving-platform wall';
-                    platformElement.style.left = platform.x + 'px';
-                    platformElement.style.top = platform.y + 'px';
-                    platformElement.style.width = platform.width + 'px';
-                    platformElement.style.height = platform.height + 'px';
-                    gameContainer.appendChild(platformElement);
+                    const movingPlatform = document.createElement('div');
+                    movingPlatform.className = 'moving-platform';
+                    movingPlatform.style.left = platform.x + 'px';
+                    movingPlatform.style.top = platform.y + 'px';
+                    movingPlatform.style.width = platform.width + 'px';
+                    movingPlatform.style.height = platform.height + 'px';
+                    platform.element = movingPlatform;
+                    gameContainer.appendChild(movingPlatform);
                 });
             }
 
-            // 조명 효과 토글 (스테이지 4와 6에 적용)
-            if (stageIndex === 3 || stageIndex === 5) {  // 스테이지 4 또는 6
+            // 조명 효과 토글 (스테이지 4, 6, 10에 적용)
+            if (stageIndex === 3 || stageIndex === 5 || stageIndex === 9) {  // 스테이지 4, 6, 10
                 lightOverlay.classList.add('active');
                 updateLightPosition();
                 
-                // 벽에 dark-wall 클래스 추가
+                // 벽 dark-wall 클래스 추가
                 document.querySelectorAll('.wall').forEach(wall => {
                     wall.classList.add('dark-wall');
                 });
             } else {
                 lightOverlay.classList.remove('active');
+                // dark-wall 클래스 제거
+                document.querySelectorAll('.wall').forEach(wall => {
+                    wall.classList.remove('dark-wall');
+                });
+            }
+
+            // 타이머 관련 코드 수정 (loadStage 함수 내)
+            if (stageIndex === 7 || stageIndex === 9) {  // 스테이지 8과 10
+                startStageTimer();
+                if (stageIndex === 7) {  // 스테이지 8
+                    gravityChangeCount = 0;
+                    updateGravityCounter();
+                } else {  // 스테이지 10에서는
+                    const counter = document.getElementById('gravity-counter');
+                    if (counter) counter.remove();
+                }
+            } else {
+                // 다른 스테이지에서는 타이머와 카운터 모두 숨기기
+                if (stageTimer) {
+                    clearInterval(stageTimer);
+                    stageTimer = null;
+                }
+                timerDisplay.style.display = 'none';
+                const counter = document.getElementById('gravity-counter');
+                if (counter) counter.remove();
+            }
+            
+            // 기존 중력 블록 제거
+            const existingGravityBlocks = document.querySelectorAll('.gravity-block');
+            existingGravityBlocks.forEach(block => block.remove());
+
+            // 중력 블록 생성 (스테이지 9에만)
+            if (stageIndex === 8 && gravityBlocks[8]) {
+                gravityBlocks[8].forEach(block => {
+                    const gravityBlock = document.createElement('div');
+                    gravityBlock.className = 'gravity-block';
+                    gravityBlock.style.left = block.x + 'px';
+                    gravityBlock.style.top = block.y + 'px';
+                    gravityBlock.style.width = block.width + 'px';
+                    gravityBlock.style.height = block.height + 'px';
+                    gravityBlock.dataset.type = block.type;
+                    gravityBlock.style.backgroundColor = '#8A2BE2'; // 보라색 직접 지정
+                    gravityBlock.style.position = 'absolute';
+                    gravityBlock.style.zIndex = '1';
+                    gameContainer.appendChild(gravityBlock);
+                });
+            }
+
+            // 스테이지 8일 때 중력 변화 카운터 초기화
+            if (stageIndex === 7) {  // 스테이지 8
+                gravityChangeCount = 0;
+                updateGravityCounter();
+            } else {
+                // 다른 스테이지에서는 카운터 제거
+                const counter = document.getElementById('gravity-counter');
+                if (counter) counter.remove();
             }
         }
 
@@ -1158,9 +1596,9 @@
             // 일반 벽과 움직이는 벽을 모두 포함하는 배열 생성
             let allWalls = [...walls];
             
-            // 현재 스테이지가 3이면 움직이는 벽도 추가
-            if (currentStage === 2 && movingPlatforms[2]) {
-                movingPlatforms[2].forEach(platform => {
+            // 현재 스테이지가 3면 움직이는 벽도 추가
+            if ((currentStage === 2 || currentStage === 7) && movingPlatforms[currentStage]) {
+                movingPlatforms[currentStage].forEach(platform => {
                     allWalls.push({
                         x: platform.x,
                         y: platform.y,
@@ -1179,7 +1617,7 @@
                     const overlapTop = playerBottom - wall.y;
                     const overlapBottom = wall.y + wall.height - playerTop;
 
-                    // 가장 작은 겹을 찾아 그 방향으로 밀어냄
+                    // 가장 작은 겹 찾아 그 방향으 밀어냄
                     const minOverlap = Math.min(overlapLeft, overlapRight, overlapTop, overlapBottom);
 
                     if (minOverlap === overlapLeft) {
@@ -1200,15 +1638,33 @@
         }
 
         function checkCollision() {
-            const playerLeft = parseFloat(player.style.left);
-            const playerTop = parseFloat(player.style.top);
-            const playerRight = playerLeft + playerWidth;
-            const playerBottom = playerTop + playerHeight;
+            const playerRect = {
+                left: parseFloat(player.style.left),
+                right: parseFloat(player.style.left) + playerWidth,
+                top: parseFloat(player.style.top),
+                bottom: parseFloat(player.style.top) + playerHeight
+            };
+
+            // 위험 구역(드존) 충돌 체크
+            const dangerZones = document.querySelectorAll('.danger-zone, .dark-danger-zone, .dark-danger-zone-10');
+            for (const zone of dangerZones) {
+                const zoneRect = {
+                    left: parseFloat(zone.style.left),
+                    right: parseFloat(zone.style.left) + parseFloat(zone.style.width),
+                    top: parseFloat(zone.style.top),
+                    bottom: parseFloat(zone.style.top) + parseFloat(zone.style.height)
+                };
+
+                if (isColliding(playerRect, zoneRect)) {
+                    resetGame();
+                    return;
+                }
+            }
 
             let wasOnGround = isOnGround;
             isOnGround = false;
 
-            if (playerLeft <= 0) {
+            if (playerRect.left <= 0) {
                 player.style.left = '0px';
                 playerVelocity.x = 0;
                 if (currentGravity === 'left') {
@@ -1216,7 +1672,7 @@
                     canJump = true;
                     isOnGround = true;
                 }
-            } else if (playerRight >= gameWidth) {
+            } else if (playerRect.right >= gameWidth) {
                 player.style.left = (gameWidth - playerWidth) + 'px';
                 playerVelocity.x = 0;
                 if (currentGravity === 'right') {
@@ -1226,7 +1682,7 @@
                 }
             }
 
-            if (playerTop <= 0) {
+            if (playerRect.top <= 0) {
                 player.style.top = '0px';
                 playerVelocity.y = 0;
                 if (currentGravity === 'up') {
@@ -1234,7 +1690,7 @@
                     canJump = true;
                     isOnGround = true;
                 }
-            } else if (playerBottom >= gameHeight) {
+            } else if (playerRect.bottom >= gameHeight) {
                 player.style.top = (gameHeight - playerHeight) + 'px';
                 playerVelocity.y = 0;
                 if (currentGravity === 'down') {
@@ -1257,9 +1713,20 @@
 
             const playerRect = player.getBoundingClientRect();
             
-            if (currentStage === 6) { // 스테이지 7
+            if (currentStage === 1) { // 스테이지 2
+                const portal1Rect = portal1.getBoundingClientRect();
+
+                // portal1에서 portal2로만 이동 가능 (단방향)
+                if (isColliding(playerRect, portal1Rect)) {
+                    player.style.left = parseFloat(portal2.style.left) + 'px';
+                    player.style.top = parseFloat(portal2.style.top) + 'px';
+                    playerVelocity = { x: 0, y: 0 };
+                    portalCooldown = true;
+                    setTimeout(() => portalCooldown = false, 100);
+                }
+            } 
+            else if (currentStage === 6) { // 스테이지 7
                 const portalPairs = [
-                    [portal1, portal2],
                     [portal3, portal4],
                     [portal5, portal6],
                     [portal7, portal8],
@@ -1281,110 +1748,62 @@
                     [portal39, portal40],
                     [portal41, portal42],
                     [portal43, portal44]
-
                 ];
 
                 for (const [portalA, portalB] of portalPairs) {
                     const portalARect = portalA.getBoundingClientRect();
-                    const portalBRect = portalB.getBoundingClientRect();
 
                     if (isColliding(playerRect, portalARect)) {
-                        teleportPlayer(portalB);
+                        player.style.left = parseFloat(portalB.style.left) + 'px';
+                        player.style.top = parseFloat(portalB.style.top) + 'px';
+                        playerVelocity = { x: 0, y: 0 };
+                        portalCooldown = true;
+                        setTimeout(() => portalCooldown = false, 100);
                         break;
                     }
-                }
-            } else if (currentStage === 1) { // 스테이지 2
-                const portal1Rect = portal1.getBoundingClientRect();
-                const portal2Rect = portal2.getBoundingClientRect();
-
-                if (isColliding(playerRect, portal1Rect)) {
-                    teleportPlayer(portal2);
                 }
             }
         }
 
         function isColliding(rect1, rect2) {
-            return rect1.left < rect2.right &&
-                   rect1.right > rect2.left &&
-                   rect1.top < rect2.bottom &&
-                   rect1.bottom > rect2.top;
-        }
-
-        function teleportPlayer(targetPortal) {
-            const targetX = parseFloat(targetPortal.style.left);
-            const targetY = parseFloat(targetPortal.style.top);
-            
-            // 포탈 위치에 약간의 오프셋 추가하여 더 자연스러운 이동
-            player.style.left = (targetX + 10) + 'px';
-            player.style.top = (targetY + 10) + 'px';
-            
-            // 포탈 사용시 속도 초기화
-            playerVelocity.x = 0;
-            playerVelocity.y = 0;
-            
-            // 포탈 쿨다운 설정
-            portalCooldown = true;
-            setTimeout(() => {
-                portalCooldown = false;
-            }, 10); // 쿨다운 시간 1초로 감소
+            const margin = 5; // 충돌 감지 여유 공간
+            return !(rect1.right - margin < rect2.left || 
+                     rect1.left + margin > rect2.right || 
+                     rect1.bottom - margin < rect2.top || 
+                     rect1.top + margin > rect2.bottom);
         }
 
         function updateMovingPlatforms() {
-            if (currentStage !== 2) return;  // 스테이지 3서만 실행
+            // 스테이지 3 또는 스테이지 8에서만 실행
+            if (currentStage !== 2 ) return;  
 
-            const platforms = document.querySelectorAll('.moving-platform');
-            movingPlatforms[2].forEach((platformData, index) => {
-                const platform = platforms[index];
-                
-                // x축 이동
-                if (platformData.startX !== platformData.endX) {
-                    platformData.x += platformData.speed * platformData.direction;
-                    
-                    // x축 향 전환 체크
-                    if (platformData.x >= platformData.endX) {
-                        platformData.direction = -1;
-                    } else if (platformData.x <= platformData.startX) {
-                        platformData.direction = 1;
+            if (movingPlatforms[currentStage]) {
+        movingPlatforms[currentStage].forEach(platform => {
+            if (platform.element) {  // element가 존재할 때만 실행
+                // 수평 이동
+                if (platform.startX !== platform.endX) {
+                    platform.x += platform.speed * platform.direction;
+                    if (platform.x >= platform.endX || platform.x <= platform.startX) {
+                        platform.direction *= -1;
                     }
-                    platform.style.left = platformData.x + 'px';
+                    platform.element.style.left = platform.x + 'px';
                 }
-                
-                // y축 이동
-                if (platformData.startY !== platformData.endY) {
-                    platformData.y += platformData.speed * platformData.direction;
-                    
-                    // y축 방향 전환 체크
-                    if (platformData.y >= platformData.endY) {
-                        platformData.direction = -1;
-                    } else if (platformData.y <= platformData.startY) {
-                        platformData.direction = 1;
+                // 수직 이동
+                if (platform.startY !== platform.endY) {
+                    platform.y += platform.speed * platform.direction;
+                    if (platform.y >= platform.endY || platform.y <= platform.startY) {
+                        platform.direction *= -1;
                     }
-                    platform.style.top = platformData.y + 'px';
+                    platform.element.style.top = platform.y + 'px';
                 }
-                
-                // 플레이어가 플랫폼 위에 있는지 체크
-                const playerLeft = parseFloat(player.style.left);
-                const playerBottom = parseFloat(player.style.top) + playerHeight;
-                const platformTop = platformData.y;
-                
-                if (playerBottom >= platformTop && 
-                    playerBottom <= platformTop + platformData.height &&
-                    playerLeft >= platformData.x - playerWidth &&
-                    playerLeft <= platformData.x + platformData.width) {
-                    // 플레이어를 랫폼과 함께 이동
-                    if (platformData.startX !== platformData.endX) {
-                        player.style.left = (parseFloat(player.style.left) + platformData.speed * platformData.direction) + 'px';
-                    }
-                    if (platformData.startY !== platformData.endY) {
-                        player.style.top = (platformData.y - playerHeight) + 'px';
-                    }
-                }
-            });
+            }
+        });
+    }
         }
 
         // 조명 위치 업데이트 함수
         function updateLightPosition() {
-            if (currentStage !== 3 && currentStage !== 5) return;  // 스테이지 4 또는 6에서만 실행
+            if (currentStage !== 3 && currentStage !== 5 && currentStage !== 9) return;  // 스테이지 4, 6, 10에서만 실행
             
             const x = parseFloat(player.style.left) + (playerWidth / 2);
             const y = parseFloat(player.style.top) + (playerHeight / 2);
@@ -1392,6 +1811,15 @@
             lightOverlay.style.maskImage = `radial-gradient(circle at ${x}px ${y}px, transparent 30px, black 50px)`;
             lightOverlay.style.webkitMaskImage = `radial-gradient(circle at ${x}px ${y}px, transparent 30px, black 50px)`;
         }
+
+        // 캐릭터 충돌 영역 설정 (전역 변수로 추가)
+        const playerCollision = {
+            topOffset: 5,      // 위쪽 여백
+            bottomOffset: 5,   // 아래쪽 여백
+            leftOffset: 10,     // 왼쪽 여백
+            rightOffset: 10,    // 오른쪽 여백
+            tolerance: 10      // 충돌 감지 여유 값
+        };
 
         function update() {
             if (currentGravity === 'left') {
@@ -1410,11 +1838,109 @@
             checkCollision();
             updateMovingPlatforms();  // 움직이는 바닥 업데이트
             checkDangerZones();
-            updateLightPosition();  // 조명 위치 업데이트 추가
+            updateLightPosition();  // 조명 위치 업데트 추가
+            updateDangerZoneVisibility();  // 추가
             checkGoalCollision();
             checkPortalCollision();
 
+            // 움직이는 플폼 업데이트
+            if (movingPlatforms[currentStage]) {
+                movingPlatforms[currentStage].forEach(platform => {
+                    // 플랫폼 동 로직
+                    if (platform.startX !== platform.endX) {
+                        platform.x += platform.speed * platform.direction;
+                        if (platform.x >= platform.endX || platform.x <= platform.startX) {
+                            platform.direction *= -1;
+                        }
+                    }
+                    if (platform.startY !== platform.endY) {
+                        platform.y += platform.speed * platform.direction;
+                        if (platform.y >= platform.endY || platform.y <= platform.startY) {
+                            platform.direction *= -1;
+                        }
+                    }
+
+                    // 플레이어의 실제 충돌 영 계산
+                    const playerLeft = parseFloat(player.style.left) + playerCollision.leftOffset;
+                    const playerTop = parseFloat(player.style.top) + playerCollision.topOffset;
+                    const playerRight = parseFloat(player.style.left) + playerWidth - playerCollision.rightOffset;
+                    const playerBottom = parseFloat(player.style.top) + playerHeight - playerCollision.bottomOffset;
+
+                    // 플랫폼과의 돌 감지
+                    if (playerRight > platform.x && 
+                        playerLeft < platform.x + platform.width && 
+                        playerBottom > platform.y && 
+                        playerTop < platform.y + platform.height) {
+                        
+                        // 충돌 방향 확인 (tolerance 값 사용)
+                        const bottomCollision = Math.abs(playerBottom - platform.y) < playerCollision.tolerance;
+                        const topCollision = Math.abs(playerTop - (platform.y + platform.height)) < playerCollision.tolerance;
+                        const leftCollision = Math.abs(playerRight - platform.x) < playerCollision.tolerance;
+                        const rightCollision = Math.abs(playerLeft - (platform.x + platform.width)) < playerCollision.tolerance;
+
+                        // 바닥 충돌
+                        if (bottomCollision && playerVelocity.y >= 0) {
+                            player.style.top = (platform.y - playerHeight + playerCollision.bottomOffset) + 'px';
+                            playerVelocity.y = 0;
+                            isOnGround = true;
+                        }
+                        // 천장 충돌
+                        else if (topCollision && playerVelocity.y <= 0) {
+                            player.style.top = (platform.y + platform.height - playerCollision.topOffset) + 'px';
+                            playerVelocity.y = 0;
+                        }
+                        // 측면 충돌
+                        else if (leftCollision && playerVelocity.x >= 0) {
+                            player.style.left = (platform.x - playerWidth + playerCollision.rightOffset) + 'px';
+                            playerVelocity.x = 0;
+                        }
+                        else if (rightCollision && playerVelocity.x <= 0) {
+                            player.style.left = (platform.x + platform.width - playerCollision.leftOffset) + 'px';
+                            playerVelocity.x = 0;
+                        }
+                    }
+                });
+            }
+
+            // 맵 경계 체크 (충돌 영역 고려)
+            const playerX = parseFloat(player.style.left) + playerCollision.leftOffset;
+            const playerY = parseFloat(player.style.top) + playerCollision.topOffset;
+            const adjustedWidth = playerWidth - (playerCollision.leftOffset + playerCollision.rightOffset);
+            const adjustedHeight = playerHeight - (playerCollision.topOffset + playerCollision.bottomOffset);
+
+            if (playerX < 0 || playerX + adjustedWidth > gameWidth || 
+                playerY < 0 || playerY + adjustedHeight > gameHeight) {
+                resetGame();
+                // 10스테이지에서 경계에 닿았을 때도 타이머 초기화
+                if (currentStage === 9) {
+                    resetStageTimer();
+                }
+            }
+
+            // 력 블록 업데이트 (스테이지 9에만)
+            if (currentStage === 8) {
+                updateGravityBlocks();
+            }
+
             requestAnimationFrame(update);
+        }
+
+        // 플레어 위치 리셋 함수 추가
+        function resetPlayerPosition() {
+            playerVelocity = { x: 0, y: 0 };
+            currentGravity = 'down';
+            
+            // 스테이지별 시작 위치로 이동
+            switch(currentStage) {
+                case 2: // 스테이지 3
+                    player.style.left = '30px';
+                    player.style.top = '30px';
+                    break;
+                // 다른 스테이지의 시작 위치도 필하다면 여기에 추가
+                default:
+                    player.style.left = '30px';
+                    player.style.top = '30px';
+            }
         }
 
         function handleKeyDown(event) {
@@ -1426,26 +1952,49 @@
             keyState[event.code] = true;
             lastMoveTime = currentTime;
 
-            switch (event.code) {
-                case 'ArrowLeft':
-                case 'KeyA':
-                    playerVelocity.x = -moveSpeed;
-                    break;
-                case 'ArrowRight':
-                case 'KeyD':
-                    playerVelocity.x = moveSpeed;
-                    break;
-                case 'ArrowUp':
-                case 'KeyW':
-                    playerVelocity.y = -moveSpeed;
-                    break;
-                case 'ArrowDown':
-                case 'KeyS':
-                    playerVelocity.y = moveSpeed;
-                    break;
+            // 스테이지 10에서는 방향키 반전
+            if (currentStage === 9) { // 0-based index이므로 스테이지 10은 9
+                switch (event.code) {
+                    case 'ArrowLeft':
+                    case 'KeyA':
+                        playerVelocity.x = moveSpeed; // 오른쪽으로 이동
+                        break;
+                    case 'ArrowRight':
+                    case 'KeyD':
+                        playerVelocity.x = -moveSpeed; // 왼쪽으로 이동
+                        break;
+                    case 'ArrowUp':
+                    case 'KeyW':
+                        playerVelocity.y = moveSpeed; // 아래로 이동
+                        break;
+                    case 'ArrowDown':
+                    case 'KeyS':
+                        playerVelocity.y = -moveSpeed; // 위로 이
+                        break;
+                }
+            } else {
+                // 기존 방향키 동작
+                switch (event.code) {
+                    case 'ArrowLeft':
+                    case 'KeyA':
+                        playerVelocity.x = -moveSpeed;
+                        break;
+                    case 'ArrowRight':
+                    case 'KeyD':
+                        playerVelocity.x = moveSpeed;
+                        break;
+                    case 'ArrowUp':
+                    case 'KeyW':
+                        playerVelocity.y = -moveSpeed;
+                        break;
+                    case 'ArrowDown':
+                    case 'KeyS':
+                        playerVelocity.y = moveSpeed;
+                        break;
+                }
             }
 
-            // WASD 키로 중력 변경
+            // WASD 키로 중력 변경 (스테이지 10에서도 동일하게 유지)
             switch (event.code) {
                 case 'KeyW':
                     changeGravity('up');
@@ -1465,23 +2014,46 @@
         function handleKeyUp(event) {
             keyState[event.code] = false;
 
-            switch (event.code) {
-                case 'ArrowLeft':
-                case 'KeyA':
-                    if (playerVelocity.x < 0) playerVelocity.x = 0;
-                    break;
-                case 'ArrowRight':
-                case 'KeyD':
-                    if (playerVelocity.x > 0) playerVelocity.x = 0;
-                    break;
-                case 'ArrowUp':
-                case 'KeyW':
-                    if (playerVelocity.y < 0) playerVelocity.y = 0;
-                    break;
-                case 'ArrowDown':
-                case 'KeyS':
-                    if (playerVelocity.y > 0) playerVelocity.y = 0;
-                    break;
+            // 스테이지 10에서는 방향키 반전
+            if (currentStage === 9) {
+                switch (event.code) {
+                    case 'ArrowLeft':
+                    case 'KeyA':
+                        if (playerVelocity.x > 0) playerVelocity.x = 0;
+                        break;
+                    case 'ArrowRight':
+                    case 'KeyD':
+                        if (playerVelocity.x < 0) playerVelocity.x = 0;
+                        break;
+                    case 'ArrowUp':
+                    case 'KeyW':
+                        if (playerVelocity.y > 0) playerVelocity.y = 0;
+                        break;
+                    case 'ArrowDown':
+                    case 'KeyS':
+                        if (playerVelocity.y < 0) playerVelocity.y = 0;
+                        break;
+                }
+            } else {
+                // 기존 방향키 동작
+                switch (event.code) {
+                    case 'ArrowLeft':
+                    case 'KeyA':
+                        if (playerVelocity.x < 0) playerVelocity.x = 0;
+                        break;
+                    case 'ArrowRight':
+                    case 'KeyD':
+                        if (playerVelocity.x > 0) playerVelocity.x = 0;
+                        break;
+                    case 'ArrowUp':
+                    case 'KeyW':
+                        if (playerVelocity.y < 0) playerVelocity.y = 0;
+                        break;
+                    case 'ArrowDown':
+                    case 'KeyS':
+                        if (playerVelocity.y > 0) playerVelocity.y = 0;
+                        break;
+                }
             }
         }
 
@@ -1489,7 +2061,19 @@
             player.style.left = '10px';
             player.style.top = (gameHeight - playerHeight - 10) + 'px';
             playerVelocity = { x: 0, y: 0 };
-            changeGravity('down');
+            
+            // 10스테이지에서는 항상 타이머 초기화
+            if (currentStage === 9) {
+                resetStageTimer();
+            }
+            
+            // 스테이지 8에서는 항상 아래 방향으로 중력 초기화
+            if (currentStage === 7) {
+                changeGravity('down');
+            } else {
+                // 다른 스테이지는 기존대로 유지
+                changeGravity('down');
+            }
         }
 
         function createParticles() {
@@ -1512,42 +2096,60 @@
             }
         }
 
+        // 전역 변수 추가
+        let gravityChangeCount = 0;
+        const MAX_GRAVITY_CHANGES = 5;
+
+        // changeGravity 함수 수정
         function changeGravity(direction) {
+            // 스테이지 8에서만 중력 변화 제한 적용
+            if (currentStage === 7) {  // 스테이지 8
+                if (gravityChangeCount >= MAX_GRAVITY_CHANGES) {
+                    resetStage8();
+                    return;
+                }
+                gravityChangeCount++;
+                updateGravityCounter();
+            }
+
             currentGravity = direction;
             playerVelocity.x = 0;
             playerVelocity.y = 0;
             gameContainer.style.borderColor = 'black';
 
             let rotation = 0;
-            if (direction === 'left') {
-                gameContainer.style.borderLeftColor = 'green';
-                rotation = 90;
-            } else if (direction === 'right') {
-                gameContainer.style.borderRightColor = 'green';
-                rotation = -90;
-            } else if (direction === 'up') {
-                gameContainer.style.borderTopColor = 'green';
-                rotation = 180;
-            } else if (direction === 'down') {
-                gameContainer.style.borderBottomColor = 'green';
-                rotation = 0;
+            switch(direction) {
+                case 'left':
+                    gameContainer.style.borderLeftColor = 'green';
+                    rotation = 90;
+                    break;
+                case 'right':
+                    gameContainer.style.borderRightColor = 'green';
+                    rotation = -90;
+                    break;
+                case 'up':
+                    gameContainer.style.borderTopColor = 'green';
+                    rotation = 180;
+                    break;
+                case 'down':
+                    gameContainer.style.borderBottomColor = 'green';
+                    rotation = 0;
+                    break;
             }
-            
-            // 이미지 회전
             player.style.transform = `rotate(${rotation}deg)`;
         }
 
         function setGoalPosition() {
-            // 각 스테이지마다 다른 목 위 설정
+            // 각 스테이지마 다른 목 위 설정
             const goalPositions = [
                 { x: 540, y: 30 }, //1번 스테이지
                 { x: 30, y: 30 }, //2번 스테이지
                 { x: 30, y: 30 }, //3번 스테이지    
                 { x: 540, y: 30 }, //4번 스테이지
                 { x: 30, y: 30 }, //5번 스테이지
-                { x: 540, y: 30 }, //6번 스테이지
+                { x: 540, y: 30 }, //6번 테이지
                 { x: 30, y: 30 }, //7번 스테이지
-                { x: 540, y: 30 }, //8번 스테이지
+                { x: 540, y: 30 }, //8번 스테이
                 { x: 30, y: 30 }, //9번 스테이지   
                 { x: 540, y: 30 }, //10번 스테이지
             ];
@@ -1561,86 +2163,87 @@
             const playerRect = player.getBoundingClientRect();
             const goalRect = goal.getBoundingClientRect();
 
-            if (playerRect.left < goalRect.right &&
-                playerRect.right > goalRect.left &&
-                playerRect.top < goalRect.bottom &&
-                playerRect.bottom > goalRect.top) {
-                // 목표에 도달했을 때
-                if (currentStage < stages.length - 1) {
-                    loadStage(currentStage + 1);
-                } else {
-                    alert('축하합니다! 모든 스테이지를 클리어하셨습니다!');
-                    loadStage(0); // 처음 스테이지로 돌아가기
+            if (isColliding(playerRect, goalRect)) {
+                if (currentStage === 9) { // 10스테이지 (인덱스는 0부터 시작하므로 9)
+                    showClearMessage(); // 클리어 메시지 표시
+                    return; // 다음 스테이지로 넘어가지 않도록 여기서 함수 종료
+                }
+                
+                // 10스테이지가 아닌 경우 기존의 스테이지 클리어 로직 실행
+                const nextStage = currentStage + 1;
+                if (nextStage < stages.length) {
+                    loadStage(nextStage);
                 }
             }
         }
+        
 
+        // checkDangerZones 함수 수정
         function checkDangerZones() {
-            // 스테이지 5와 6에서만 체크
-            if (currentStage !== 4 && currentStage !== 5) return;  
+            if (currentStage !== 4 && currentStage !== 5 && currentStage !== 9) return;
             
             const playerLeft = parseFloat(player.style.left);
             const playerTop = parseFloat(player.style.top);
             const playerRight = playerLeft + playerWidth;
             const playerBottom = playerTop + playerHeight;
             
-            // 스테이지 5의 일반 위험 구역 체크
-            if (currentStage === 4 && dangerZones[4]) {
-                for (const zone of dangerZones[4]) {
-                    if (playerRight > zone.x && 
-                        playerLeft < zone.x + zone.width &&
-                        playerBottom > zone.y && 
-                        playerTop < zone.y + zone.height) {
+            if (currentStage === 9) {  // 스테이지 10
+                const dangerZones = document.querySelectorAll('.dark-danger-zone-10');
+                dangerZones.forEach(zone => {
+                    const zoneLeft = parseFloat(zone.style.left);
+                    const zoneTop = parseFloat(zone.style.top);
+                    const zoneRight = zoneLeft + parseFloat(zone.style.width);
+                    const zoneBottom = zoneTop + parseFloat(zone.style.height);
+                    
+                    if (playerRight > zoneLeft && 
+                        playerLeft < zoneRight && 
+                        playerBottom > zoneTop && 
+                        playerTop < zoneBottom) {
                         resetGame();
-                        break;
+                        // 타이머 초기화 추가
+                        if (stageTimer) {
+                            clearInterval(stageTimer);
+                        }
+                        timeLimit = 30; // 시간 초기화
+                        startStageTimer(); // 타이머 재시작
                     }
-                }
-            }
-            
-            // 스테이지 6의 어두운 위험 구역 체크
-            if (currentStage === 5 && darkDangerZones[5]) {
-                for (const zone of darkDangerZones[5]) {
-                    if (playerRight > zone.x && 
-                        playerLeft < zone.x + zone.width &&
-                        playerBottom > zone.y && 
-                        playerTop < zone.y + zone.height) {
-                        resetGame();
-                        break;
-                    }
-                }
+                });
+            } else {
+                // ... 기존 위험 구역 체크 코드 ...
             }
         }
 
-        // 초기화 코드 (createStageButtons() 호출 전에 추가)
+        // 볼륨 컨트롤 이벤트 추가
         function initializeAudio() {
-            // BGM 요소들 저장
-            for (let i = 1; i <= 7; i++) {
-                bgmElements[i] = document.getElementById(`bgm-${i}`);
-                bgmElements[i].volume = volume;
-            }
-
-            // 볼륨 컨트롤 이벤트 리스너
-            const volumeSlider = document.getElementById('volume-slider');
-            const volumeValue = document.getElementById('volume-value');
             const muteButton = document.getElementById('mute-button');
+            const volumeSlider = document.getElementById('volume-slider');
+            const volumeDisplay = document.getElementById('volume-value');
 
-            volumeSlider.addEventListener('input', (e) => {
-                volume = e.target.value / 100;
-                volumeValue.textContent = `${e.target.value}%`;
-                
-                if (!isMuted) {
-                    Object.values(bgmElements).forEach(audio => {
-                        audio.volume = volume;
-                    });
-                }
+            // 모든 BGM 요소에 초기 볼륨 설정
+            Object.values(bgmElements).forEach(audio => {
+                audio.volume = volumeValue / 100;
             });
 
+            // 음소거 버튼 이벤트
             muteButton.addEventListener('click', () => {
                 isMuted = !isMuted;
                 muteButton.textContent = isMuted ? '🔇' : '🔊';
                 
                 Object.values(bgmElements).forEach(audio => {
-                    audio.volume = isMuted ? 0 : volume;
+                    audio.muted = isMuted;
+                });
+                
+                logGameEvent('MUTE_TOGGLE', isMuted ? 'muted' : 'unmuted');
+            });
+
+            // 볼륨 슬라이더 이벤트
+            volumeSlider.addEventListener('input', () => {
+                const newVolume = volumeSlider.value;
+                volumeValue = newVolume;
+                volumeDisplay.textContent = `${newVolume}%`;
+                
+                Object.values(bgmElements).forEach(audio => {
+                    audio.volume = newVolume / 100;
                 });
             });
         }
@@ -1721,14 +2324,23 @@
         initializeAudio();
         initializeReviewSystem();
         createStageButtons();
-        loadStage(0);
-        update();
+
+        // window.onload 이벤트 수정
+        window.onload = function() {
+            // 마지막 저장된 스테이지로 로드
+            loadStage(lastStage);
+            
+            // BGM 초기화
+            for (let i = 1; i <= 10; i++) {
+                bgmElements[i] = document.getElementById(`bgm-${i}`);
+            }
+            
+            update();
+        };
 
         document.addEventListener('keydown', handleKeyDown);
         document.addEventListener('keyup', handleKeyUp);
 
-        //goal.style.left = '570px';
-        //goal.style.top = '10px';
 
         let sessionStartTime = Date.now();
 
@@ -1761,19 +2373,523 @@
             logEvent('click', `x: ${e.clientX}, y: ${e.clientY}`);
         });
 
-        // 키보드 이벤트 리스너
+        // 키보드 이벤트 스너
         document.addEventListener('keydown', (e) => {
             logEvent('keypress', e.key);
         });
 
-        // 페이지 종료 시 최종 세션 시간 기록
+        // 페이지 종료 시 최종 세션 시간 기
         window.addEventListener('beforeunload', () => {
             logEvent('session_end', '페이지 종료');
         });
+
+        // 키 입력 관련 설정값 (정 가능)
+        const MOVEMENT = {
+            MOVE_SPEED: 12,      // 기 이동 속도
+            MAX_SPEED: 12,      // 최대 이동 속도
+            ACCELERATION: 1.2,   // 가속도
+            DECELERATION: 0.8,  // 감속도
+            DIRECTION_CHANGE_SPEED: 1.5,  // 방향 전환 속도 (높을수록 빠르게 전환)
+            MINIMUM_SPEED: 0.1,  // 속도가 이 값 이하면 0으로 설정
+            INSTANT_DIRECTION_CHANGE: false, // true면 즉시 방향 전환
+            SMOOTH_FACTOR: 0.85  // 부드러운 정도 (0~1, 1 가까울수록 부드러움)
+        };
+
+        // 현재 도 상태
+        let currentSpeed = { x: 0, y: 0 };
+        let targetSpeed = { x: 0, y: 0 };
+
+        function updatePlayer() {
+            let newX = parseFloat(player.style.left) || 0;
+            let newY = parseFloat(player.style.top) || 0;
+
+            // 중력 적용 (기존과 동일)
+            switch(currentGravity) {
+                case 'down':
+                    playerVelocity.y = Math.min(playerVelocity.y + MOVEMENT.GRAVITY, MOVEMENT.MAX_FALL_SPEED);
+                    break;
+                case 'up':
+                    playerVelocity.y = Math.max(playerVelocity.y - MOVEMENT.GRAVITY, -MOVEMENT.MAX_FALL_SPEED);
+                    break;
+                case 'left':
+                    playerVelocity.x = Math.max(playerVelocity.x - MOVEMENT.GRAVITY, -MOVEMENT.MAX_FALL_SPEED);
+                    break;
+                case 'right':
+                    playerVelocity.x = Math.min(playerVelocity.x + MOVEMENT.GRAVITY, MOVEMENT.MAX_FALL_SPEED);
+                    break;
+            }
+
+            // 목표 속도 설정
+            if (currentGravity === 'up' || currentGravity === 'down') {
+                // 좌우 이동
+                if (keyState['ArrowLeft'] || keyState['KeyA']) {
+                    targetSpeed.x = -MOVEMENT.MAX_SPEED;
+                } else if (keyState['ArrowRight'] || keyState['KeyD']) {
+                    targetSpeed.x = MOVEMENT.MAX_SPEED;
+                } else {
+                    targetSpeed.x = 0;
+                }
+
+                // 부드러운 속도 전환
+                if (MOVEMENT.INSTANT_DIRECTION_CHANGE) {
+                    // 즉시 방향 전환
+                    currentSpeed.x = targetSpeed.x;
+                } else {
+                    // 부드러운 방향 전환
+                    const speedDiff = targetSpeed.x - currentSpeed.x;
+                    currentSpeed.x += speedDiff * MOVEMENT.DIRECTION_CHANGE_SPEED * MOVEMENT.SMOOTH_FACTOR;
+                    
+                    // 미세한 속도는 0으로
+                    if (Math.abs(currentSpeed.x) < MOVEMENT.MINIMUM_SPEED) {
+                        currentSpeed.x = 0;
+                    }
+                }
+            } else {
+                // 상하 이동
+                if (keyState['ArrowUp'] || keyState['KeyW']) {
+                    targetSpeed.y = -MOVEMENT.MAX_SPEED;
+                } else if (keyState['ArrowDown'] || keyState['KeyS']) {
+                    targetSpeed.y = MOVEMENT.MAX_SPEED;
+                } else {
+                    targetSpeed.y = 0;
+                }
+
+                // 부드러운 속도 전환
+                if (MOVEMENT.INSTANT_DIRECTION_CHANGE) {
+                    currentSpeed.y = targetSpeed.y;
+                } else {
+                    const speedDiff = targetSpeed.y - currentSpeed.y;
+                    currentSpeed.y += speedDiff * MOVEMENT.DIRECTION_CHANGE_SPEED * MOVEMENT.SMOOTH_FACTOR;
+                    
+                    if (Math.abs(currentSpeed.y) < MOVEMENT.MINIMUM_SPEED) {
+                        currentSpeed.y = 0;
+                    }
+                }
+            }
+
+            // 이동 적용
+            newX += currentSpeed.x;
+            newY += currentSpeed.y;
+            newX += playerVelocity.x;
+            newY += playerVelocity.y;
+
+            // 벽 충돌 체크 및 위치 조정
+            const nextRect = {
+                left: newX,
+                right: newX + playerWidth,
+                top: newY,
+                bottom: newY + playerHeight
+            };
+
+            // ... 나머지 코드는 동일 ...
+        }
+
+        // 점프 처리
+        document.addEventListener('keydown', (e) => {
+            keyState[e.code] = true;
+            
+            if ((e.code === 'Space' || e.code === 'KeyW' || e.code === 'ArrowUp') && canJump) {
+                const currentTime = Date.now();
+                if (currentTime - lastJumpTime > MOVEMENT.JUMP_COOLDOWN) {
+                    switch(currentGravity) {
+                        case 'down':
+                            playerVelocity.y = -MOVEMENT.JUMP_FORCE;
+                            break;
+                        case 'up':
+                            playerVelocity.y = MOVEMENT.JUMP_FORCE;
+                            break;
+                        case 'left':
+                            playerVelocity.x = MOVEMENT.JUMP_FORCE;
+                            break;
+                        case 'right':
+                            playerVelocity.x = -MOVEMENT.JUMP_FORCE;
+                            break;
+                    }
+                    lastJumpTime = currentTime;
+                    canJump = false;
+                }
+            }
+        });
+
+        // 위험 구역 가성 업데이트 함수 추가
+        function updateDangerZoneVisibility() {
+            if (currentStage !== 9) return;
+
+            const playerX = parseFloat(player.style.left) + playerWidth / 2;
+            const playerY = parseFloat(player.style.top) + playerHeight / 2;
+            const visibilityRadius = 100; // 보이는 범위 설정
+
+            document.querySelectorAll('.dark-danger-zone-10').forEach(zone => {
+                const zoneX = parseFloat(zone.style.left) + parseFloat(zone.style.width) / 2;
+                const zoneY = parseFloat(zone.style.top) + parseFloat(zone.style.height) / 2;
+                
+                // 플레이어와 위험 구역 사이의 거리 계산
+                const distance = Math.sqrt(
+                    Math.pow(playerX - zoneX, 2) + 
+                    Math.pow(playerY - zoneY, 2)
+                );
+                
+                // 거리에 따른 투명도 계산
+                if (distance < visibilityRadius) {
+                    const opacity = 1 - (distance / visibilityRadius);
+                    zone.style.opacity = opacity;
+                } else {
+                    zone.style.opacity = 0;
+                }
+            });
+        }
+
+        // 새로운 함수 추가
+        function updateGravityBlocks() {
+            const blocks = document.querySelectorAll('.gravity-block');
+            blocks.forEach(block => {
+                const blockRect = block.getBoundingClientRect();
+                const playerRect = player.getBoundingClientRect();
+                
+                // 플레이어와 블록 충돌 체크
+                if (checkBlockCollision(playerRect, blockRect)) {
+                    resetGame();
+                    return;
+                }
+
+                const type = block.dataset.type;
+                let shouldMove = false;
+                
+                // 블록 타입에 따른 중력 반응
+                if (type === 'horizontal' && (currentGravity === 'up' || currentGravity === 'down')) {
+                    shouldMove = true;
+                } else if (type === 'vertical' && (currentGravity === 'left' || currentGravity === 'right')) {
+                    shouldMove = true;
+                }
+
+                if (shouldMove) {
+                    moveGravityBlock(block);
+                }
+            });
+        }
+
+        function checkBlockCollision(rect1, rect2) {
+            return !(rect1.right < rect2.left || 
+                     rect1.left > rect2.right || 
+                     rect1.bottom < rect2.top || 
+                     rect1.top > rect2.bottom);
+        }
+
+        function checkWallCollisionForBlock(newX, newY, block) {
+            const blockWidth = parseFloat(block.style.width);
+            const blockHeight = parseFloat(block.style.height);
+            const gap = 1; // 벽과의 간격을 1픽셀로 조정
+
+            return walls.some(wall => {
+                // 충돌이 감지되면 블을 벽에 딱 붙도록 조정
+                if (newX < wall.x + wall.width &&
+                    newX + blockWidth > wall.x &&
+                    newY < wall.y + wall.height &&
+                    newY + blockHeight > wall.y) {
+                    
+                    // 현재 중력 방향에 따라 위치 조정
+                    switch (currentGravity) {
+                        case 'down':
+                            block.style.top = (wall.y - blockHeight - gap) + 'px';
+                            break;
+                        case 'up':
+                            block.style.top = (wall.y + wall.height + gap) + 'px';
+                            break;
+                        case 'left':
+                            block.style.left = (wall.x + wall.width + gap) + 'px';
+                            break;
+                        case 'right':
+                            block.style.left = (wall.x - blockWidth - gap) + 'px';
+                            break;
+                    }
+                    return true;
+                }
+                return false;
+            });
+        }
+
+        function moveGravityBlock(block) {
+            const speed = 3;
+            let newX = parseFloat(block.style.left);
+            let newY = parseFloat(block.style.top);
+            const blockWidth = parseFloat(block.style.width);
+            const blockHeight = parseFloat(block.style.height);
+
+            switch (currentGravity) {
+                case 'down':
+                    newY = Math.min(newY + speed, gameHeight - blockHeight);
+                    break;
+                case 'up':
+                    newY = Math.max(newY - speed, 0);
+                    break;
+                case 'left':
+                    newX = Math.max(newX - speed, 0);
+                    break;
+                case 'right':
+                    newX = Math.min(newX + speed, gameWidth - blockWidth);
+                    break;
+            }
+
+            // 벽과의 충돌 체크 및 정확한 위치 조정
+            walls.forEach(wall => {
+                const collision = checkBlockWallCollision(newX, newY, blockWidth, blockHeight, wall);
+                if (collision.collided) {
+                    switch (currentGravity) {
+                        case 'down':
+                            newY = wall.y - blockHeight;
+                            break;
+                        case 'up':
+                            newY = wall.y + wall.height;
+                            break;
+                        case 'left':
+                            newX = wall.x + wall.width;
+                            break;
+                        case 'right':
+                            newX = wall.x - blockWidth;
+                            break;
+                    }
+                }
+            });
+
+            block.style.left = newX + 'px';
+            block.style.top = newY + 'px';
+        }
+
+        function checkBlockWallCollision(blockX, blockY, blockWidth, blockHeight, wall) {
+            const collision = {
+                collided: false,
+                direction: null
+            };
+
+            // 충돌 여부 확인
+            if (blockX < wall.x + wall.width &&
+                blockX + blockWidth > wall.x &&
+                blockY < wall.y + wall.height &&
+                blockY + blockHeight > wall.y) {
+                
+                collision.collided = true;
+
+                // 충돌 방향 결정
+                const overlapX = Math.min(blockX + blockWidth, wall.x + wall.width) - 
+                                Math.max(blockX, wall.x);
+                const overlapY = Math.min(blockY + blockHeight, wall.y + wall.height) - 
+                                Math.max(blockY, wall.y);
+
+                if (overlapX < overlapY) {
+                    collision.direction = blockX < wall.x ? 'right' : 'left';
+                } else {
+                    collision.direction = blockY < wall.y ? 'down' : 'up';
+                }
+            }
+
+            return collision;
+        }
+
+        // gravityBlocks 객체 수정
+        const gravityBlocks = {
+            8: [ // 스테이지 9
+                { 
+                    x: 100, y: 500, 
+                    width: 100, height: 20, 
+                    type: 'horizontal'
+                },
+                { 
+                    x: 0, y: 100, 
+                    width: 20, height: 100, 
+                    type: 'vertical' /* 수직 */
+                },
+                { 
+                    x: 100, y: 0, 
+                    width: 200, height: 20, 
+                    type: 'horizontal'
+                },
+                { 
+                    x: 300, y: 400, 
+                    width: 20, height: 100, 
+                    type: 'vertical'
+                },
+                { 
+                    x: 500, y: 200, 
+                    width: 100, height: 20, 
+                    type: 'vertical'
+                }
+            ]
+        };
+
+        // loadStage 함수 내의 중력 블록 생성 부분 수정
+        if (stageIndex === 8 && gravityBlocks[8]) {
+            gravityBlocks[8].forEach(block => {
+                const gravityBlock = document.createElement('div');
+                gravityBlock.className = 'gravity-block';
+                gravityBlock.style.left = block.x + 'px';
+                gravityBlock.style.top = block.y + 'px';
+                gravityBlock.style.width = block.width + 'px';
+                gravityBlock.style.height = block.height + 'px';
+                gravityBlock.dataset.type = block.type;
+                gravityBlock.style.backgroundColor = '#8A2BE2'; // 보라색 직접 지정
+                gravityBlock.style.position = 'absolute';
+                gravityBlock.style.zIndex = '1';
+                gameContainer.appendChild(gravityBlock);
+            });
+        }
+
+        // 중력 변화 카운터 표시 함수 추가
+        function updateGravityCounter() {
+            let counterDisplay = document.getElementById('gravity-counter');
+            if (!counterDisplay) {
+                counterDisplay = document.createElement('div');
+                counterDisplay.id = 'gravity-counter';
+                counterDisplay.style.position = 'absolute';
+                counterDisplay.style.top = '-80px';
+                counterDisplay.style.left = '20px';
+                counterDisplay.style.padding = '10px';
+                counterDisplay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+                counterDisplay.style.color = 'white';
+                counterDisplay.style.fontSize = '18px';
+                counterDisplay.style.borderRadius = '5px';
+                counterDisplay.style.zIndex = '1000';
+                gameContainer.appendChild(counterDisplay);
+            }
+            
+            const remainingChanges = MAX_GRAVITY_CHANGES - gravityChangeCount;
+            counterDisplay.textContent = `남은 중력 변화: ${remainingChanges}`;
+            counterDisplay.style.color = remainingChanges <= 2 ? '#ff4444' : 'white';
+        }
+
+        // 스테이지 10 리셋 함수 추가
+        function resetStage10() {
+            resetStage8();
+            
+            // 중력 변화 카운터가 있다면 제거
+            const counter = document.getElementById('gravity-counter');
+            if (counter) counter.remove();
+            
+            // 타이머 재시작
+            startStageTimer();
+        }
+
+        // startStageTimer 함수 수정
+        function startStageTimer() {
+            timerDisplay.style.display = 'block';
+            timeLimit = 30;
+            
+            if (stageTimer) clearInterval(stageTimer);
+            
+            updateTimerDisplay();
+            stageTimer = setInterval(() => {
+                timeLimit--;
+                updateTimerDisplay();
+                
+                if (timeLimit <= 0) {
+                    clearInterval(stageTimer);
+                    if (currentStage === 7) {  // 스테이지 8
+                        resetStage8();
+                    } else if (currentStage === 9) {  // 스테이지 10
+                        resetStage10();
+                    }
+                }
+            }, 1000);
+        }
+
+        function showClearMessage() {
+            // 기존 클리어 메시지가 있다면 제거
+            const existingMessage = document.querySelector('.clear-message');
+            if (existingMessage) {
+                existingMessage.remove();
+            }
+
+            // 새로운 클리어 메시지 생성
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'clear-message';
+            messageDiv.innerHTML = `
+                <h2>🎉 축하합니다! 🎉</h2>
+                <p>모든 스테이지를 클리어하셨습니다!</p>
+                <p>게임을 즐겨주셔서 감사합니다.</p>
+                <p>아래 버튼을 눌러 설문조사에 참여해주세요!</p>
+                <button onclick="openSurvey()">설문조사 참여하기</button>
+            `;
+
+            document.body.appendChild(messageDiv);
+            
+            // 게임 이벤트 로그 기록
+            logGameEvent('GAME_CLEAR', '모든 스테이지 클리어');
+        }
+
+        // 설문조사 폼으로 이동하는 함수
+        function openSurvey() {
+            // 설문조사 URL을 여기에 입력하세요
+            const surveyUrl = 'https://forms.gle/sY2HgETKMgFW6iGp8';
+            
+            // 새 창에서 설문조사 폼 열기
+            window.open(surveyUrl, '_blank');
+            
+            // 클리어 메시지 닫기
+            const messageDiv = document.querySelector('.clear-message');
+            if (messageDiv) {
+                messageDiv.remove();
+            }
+        }
+
+        function checkDangerZoneCollision() {
+            const playerRect = player.getBoundingClientRect();
+            
+            // 스테이지 10의 위험 구역 확인
+            if (currentStage === 9) { // 10스테이지
+                const dangerZones = document.querySelectorAll('.dark-danger-zone-10');
+                for (const zone of dangerZones) {
+                    const zoneRect = zone.getBoundingClientRect();
+                    if (isColliding(playerRect, zoneRect)) {
+                        // 플레이어 위치 초기화
+                        player.style.left = '20px';
+                        player.style.top = '540px';
+                        playerVelocity = { x: 0, y: 0 };
+                        
+                        // 타이머 초기화
+                        if (stageTimer) {
+                            clearInterval(stageTimer);
+                        }
+                        resetStage10();
+                        
+                        return true;
+                    }
+                }
+            }
+            
+            // 다른 스테이지의 위험 구역 확인 (기존 코드)
+            if (dangerZones[currentStage]) {
+                for (const zone of dangerZones[currentStage]) {
+                    const zoneRect = {
+                        left: zone.x,
+                        right: zone.x + zone.width,
+                        top: zone.y,
+                        bottom: zone.y + zone.height
+                    };
+                    if (isColliding(playerRect, zoneRect)) {
+                        player.style.left = '20px';
+                        player.style.top = '540px';
+                        playerVelocity = { x: 0, y: 0 };
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        // resetStageTimer 함수가 없다면 추가
+        function resetStageTimer() {
+            if (stageTimer) {
+                clearInterval(stageTimer);
+                stageTimer = null;
+            }
+            timeLimit = 30;
+            if (timerDisplay) {
+                timerDisplay.textContent = timeLimit;
+            }
+            startStageTimer();
+        }
     </script>
 </body>
 </html>
-
 
 
 
