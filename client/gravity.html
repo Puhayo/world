@@ -89,6 +89,9 @@
             cursor: pointer;
             flex: 0 0 calc(20% - 10px);
         }
+        .stage-button.disabled {
+            opacity: 0.5;
+        }
         .particle {
             position: absolute;
             width: 5px;
@@ -709,7 +712,7 @@
         </div>
         <div id="integrated-controls">
             <div id="survey-block">
-                <a id="survey-link" href="https://forms.gle/sY2HgETKMgFW6iGp8" target="_blank">
+                <a id="survey-link" href="https://forms.gle/qFotWGKbx5fqKLfT7" target="_blank">
                     게임 설문조사
                 </a>
             </div>
@@ -1001,7 +1004,7 @@
                 {
                     x: 400, y: 100, width: 20, height: 220,  // 초기 위치와 크기
                     startX: 400, endX: 400,  // x축 이동 범위 (직 이동만)
-                    startY: 100, endY: 180,  // y축 이동 범위
+                    startY: 100, endY: 180,  // y축 이동 ��위
                     speed: 1,  // 이동 속도
                     direction: 1  // 1: 오른쪽/아래로, -1: 왼쪽/위로
                 },
@@ -1168,16 +1171,44 @@
                 const button = document.createElement('button');
                 button.textContent = `스테이지 ${i + 1}`;
                 button.className = 'stage-button';
-                button.onclick = () => loadStage(i);
+                button.onclick = () => {
+                    // 첫 스테이지이거나 이전 스테이지를 클리어했을 때만 접근 가능
+                    const clearedStages = localStorage.getItem('clearedStages') ? 
+                        JSON.parse(localStorage.getItem('clearedStages')) : [];
+                    
+                    if (i === 0 || clearedStages.includes(i - 1)) {
+                        loadStage(i);
+                    } else {
+                        alert('이전 스테이지를 먼저 클리어해주세요!');
+                    }
+                };
                 stageButtonsContainer.appendChild(button);
 
                 if (i === stagesPerRow - 1) {
                     stageButtonsContainer.appendChild(document.createElement('br'));
                 }
             }
+            
+            // 초기에 버튼 상태 업데이트
+            updateStageButtons();
         }
         
-        
+        // 스테이지 버튼 상태 업데이트 함수
+        function updateStageButtons() {
+            const buttons = document.querySelectorAll('.stage-button');
+            const clearedStages = localStorage.getItem('clearedStages') ? 
+                JSON.parse(localStorage.getItem('clearedStages')) : [];
+
+            buttons.forEach((button, index) => {
+                if (index === 0 || clearedStages.includes(index - 1)) {
+                    button.classList.remove('disabled');
+                    button.disabled = false;
+                } else {
+                    button.classList.add('disabled');
+                    button.disabled = true;
+                }
+            });
+        }
 
         // 페이지 최상단에 추가
         let lastStage = 0; // 전역 변수로 마지막 스테이지 저장
@@ -1365,7 +1396,7 @@
                 portal16.style.left = '20px';
                 portal16.style.top = '440px';
 
-                portal17.style.left = '20px'; /* 여덟번째 원점*/
+                portal17.style.left = '20px'; /* 여덟번째 ��점*/
                 portal17.style.top = '340px';
                 portal18.style.left = '20px';
                 portal18.style.top = '540px';
@@ -1434,6 +1465,7 @@
                 portal43.style.top = '30px';
                 portal44.style.left = '20px';
                 portal44.style.top = '540px';
+
 
 
 
@@ -1702,7 +1734,7 @@
 
             checkWallCollision();
 
-            // 바닥에 닿았을 때 입자 효과 생성
+            // 바닥에 닿았을 때 입자 효과 ��성
             if (!wasOnGround && isOnGround) {
                 createParticles();
             }
@@ -2164,16 +2196,27 @@
             const goalRect = goal.getBoundingClientRect();
 
             if (isColliding(playerRect, goalRect)) {
-                if (currentStage === 9) { // 10스테이지 (인덱스는 0부터 시작하므로 9)
-                    showClearMessage(); // 클리어 메시지 표시
-                    return; // 다음 스테이지로 넘어가지 않도록 여기서 함수 종료
+                // 스테이지 클리어 시간 기록
+                const stageTime = Math.floor((Date.now() - stageStartTime) / 1000);
+                logGameEvent('STAGE_CLEAR', `Time: ${stageTime}s`);
+
+                // 클리어한 스테이지 저장
+                const clearedStages = localStorage.getItem('clearedStages') ? 
+                    JSON.parse(localStorage.getItem('clearedStages')) : [];
+                if (!clearedStages.includes(currentStage)) {
+                    clearedStages.push(currentStage);
+                    localStorage.setItem('clearedStages', JSON.stringify(clearedStages));
                 }
-                
-                // 10스테이지가 아닌 경우 기존의 스테이지 클리어 로직 실행
-                const nextStage = currentStage + 1;
-                if (nextStage < stages.length) {
-                    loadStage(nextStage);
+
+                // 스테이지 10 클리어 시 엔딩 페이지로 이동
+                if (currentStage === 9) {  // 0-based index이므로 9는 스테이지 10
+                    window.location.href = 'https://forms.gle/CR2ZSotBoJf6zsB19';
+                    return;
                 }
+
+                // 다음 스테이지로 이동
+                loadStage(currentStage + 1);
+                updateStageButtons();
             }
         }
         
@@ -2791,45 +2834,7 @@
             }, 1000);
         }
 
-        function showClearMessage() {
-            // 기존 클리어 메시지가 있다면 제거
-            const existingMessage = document.querySelector('.clear-message');
-            if (existingMessage) {
-                existingMessage.remove();
-            }
-
-            // 새로운 클리어 메시지 생성
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'clear-message';
-            messageDiv.innerHTML = `
-                <h2>🎉 축하합니다! 🎉</h2>
-                <p>모든 스테이지를 클리어하셨습니다!</p>
-                <p>게임을 즐겨주셔서 감사합니다.</p>
-                <p>아래 버튼을 눌러 설문조사에 참여해주세요!</p>
-                <button onclick="openSurvey()">설문조사 참여하기</button>
-            `;
-
-            document.body.appendChild(messageDiv);
-            
-            // 게임 이벤트 로그 기록
-            logGameEvent('GAME_CLEAR', '모든 스테이지 클리어');
-        }
-
-        // 설문조사 폼으로 이동하는 함수
-        function openSurvey() {
-            // 설문조사 URL을 여기에 입력하세요
-            const surveyUrl = 'https://forms.gle/sY2HgETKMgFW6iGp8';
-            
-            // 새 창에서 설문조사 폼 열기
-            window.open(surveyUrl, '_blank');
-            
-            // 클리어 메시지 닫기
-            const messageDiv = document.querySelector('.clear-message');
-            if (messageDiv) {
-                messageDiv.remove();
-            }
-        }
-
+        
         function checkDangerZoneCollision() {
             const playerRect = player.getBoundingClientRect();
             
@@ -2886,6 +2891,13 @@
                 timerDisplay.textContent = timeLimit;
             }
             startStageTimer();
+        }
+
+        // 스테이지 초기화 시 클리어 기록도 초기화하는 함수 추가
+        function resetProgress() {
+            localStorage.removeItem('clearedStages');
+            updateStageButtons();
+            loadStage(0); // 첫 스테이지로 이동
         }
     </script>
 </body>
