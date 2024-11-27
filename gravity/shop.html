@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>중력 게임 상점</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #1a1a1a;
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 2px solid #333;
+        }
+
+        .coin-display {
+            font-size: 24px;
+            color: #ffd700;
+        }
+
+        .shop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px 0;
+        }
+
+        .shop-item {
+            background-color: #2a2a2a;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .shop-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .item-image {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto;
+            background-color: #333;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        .item-name {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        .item-price {
+            color: #ffd700;
+            font-size: 20px;
+            margin: 10px 0;
+        }
+
+        .buy-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .buy-button:hover {
+            background-color: #45a049;
+        }
+
+        .buy-button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .inventory {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #2a2a2a;
+            border-radius: 10px;
+        }
+
+        .inventory-title {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .inventory-item {
+            background-color: #333;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .back-button {
+            background-color: #666;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .back-button:hover {
+            background-color: #555;
+        }
+
+        .equipped {
+            border: 2px solid #ffd700;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>중력 게임 상점</h1>
+            <div class="coin-display">코인: <span id="coin-amount">0</span></div>
+        </div>
+
+        <div class="shop-grid" id="shop-items">
+            <!-- 상점 아이템들은 JavaScript로 동적 생성됨 -->
+        </div>
+
+        <div class="inventory">
+            <h2 class="inventory-title">보유 아이템</h2>
+            <div class="inventory-grid" id="inventory-items">
+                <!-- 보유 아이템들은 JavaScript로 동적 생성됨 -->
+            </div>
+        </div>
+
+        <button class="back-button" onclick="location.href='gravity.html'">게임으로 돌아가기</button>
+    </div>
+
+    <div class="notification" id="notification"></div>
+
+    <script>
+        // 상점 아이템 데이터
+        const shopItems = [
+            {
+                id: 'skin1',
+                name: '기본 스킨',
+                price: 0,
+                image: 'basic_skin.png',
+                type: 'skin',
+                color: '#ffffff'
+            },
+            {
+                id: 'skin2',
+                name: '골드 스킨',
+                price: 100,
+                image: 'gold_skin.png',
+                type: 'skin',
+                color: '#ffd700'
+            },
+            {
+                id: 'skin3',
+                name: '네온 스킨',
+                price: 200,
+                image: 'neon_skin.png',
+                type: 'skin',
+                color: '#00ff00'
+            },
+            {
+                id: 'trail1',
+                name: '불꽃 트레일',
+                price: 150,
+                image: 'fire_trail.png',
+                type: 'trail'
+            },
+            {
+                id: 'effect1',
+                name: '무지개 이펙트',
+                price: 300,
+                image: 'rainbow_effect.png',
+                type: 'effect'
+            }
+        ];
+
+        let coins = parseInt(localStorage.getItem('coins')) || 0;
+        let inventory = JSON.parse(localStorage.getItem('inventory')) || ['skin1'];
+        let equipped = JSON.parse(localStorage.getItem('equipped')) || {
+            skin: 'skin1',
+            trail: null,
+            effect: null
+        };
+
+        // 초기화
+        function initialize() {
+            updateCoinDisplay();
+            renderShopItems();
+            renderInventory();
+        }
+
+        // 코인 표시 업데이트
+        function updateCoinDisplay() {
+            document.getElementById('coin-amount').textContent = coins;
+        }
+
+        // 상점 아이템 렌더링
+        function renderShopItems() {
+            const shopGrid = document.getElementById('shop-items');
+            shopGrid.innerHTML = '';
+
+            shopItems.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'shop-item';
+                
+                const itemImage = document.createElement('div');
+                itemImage.className = 'item-image';
+                if (item.color) {
+                    itemImage.style.backgroundColor = item.color;
+                }
+
+                const alreadyOwned = inventory.includes(item.id);
+                
+                itemElement.innerHTML = `
+                    ${itemImage.outerHTML}
+                    <div class="item-name">${item.name}</div>
+                    <div class="item-price">${item.price} 코인</div>
+                    <button class="buy-button" 
+                            onclick="buyItem('${item.id}')"
+                            ${alreadyOwned ? 'disabled' : ''}
+                            style="${alreadyOwned ? 'background-color: #666' : ''}">
+                        ${alreadyOwned ? '구매완료' : '구매하기'}
+                    </button>
+                `;
+
+                shopGrid.appendChild(itemElement);
+            });
+        }
+
+        // 인벤토리 렌더링
+        function renderInventory() {
+            const inventoryGrid = document.getElementById('inventory-items');
+            inventoryGrid.innerHTML = '';
+
+            inventory.forEach(itemId => {
+                const item = shopItems.find(i => i.id === itemId);
+                if (!item) return;
+
+                const itemElement = document.createElement('div');
+                itemElement.className = `inventory-item ${isEquipped(itemId) ? 'equipped' : ''}`;
+                
+                const itemImage = document.createElement('div');
+                itemImage.className = 'item-image';
+                if (item.color) {
+                    itemImage.style.backgroundColor = item.color;
+                }
+
+                itemElement.innerHTML = `
+                    ${itemImage.outerHTML}
+                    <div class="item-name">${item.name}</div>
+                    <button class="buy-button" 
+                            onclick="equipItem('${itemId}', '${item.type}')"
+                            style="background-color: ${isEquipped(itemId) ? '#666' : '#4CAF50'}">
+                        ${isEquipped(itemId) ? '장착중' : '장착하기'}
+                    </button>
+                `;
+
+                inventoryGrid.appendChild(itemElement);
+            });
+        }
+
+        // 아이템 구매
+        function buyItem(itemId) {
+            const item = shopItems.find(i => i.id === itemId);
+            if (!item) return;
+
+            if (coins >= item.price && !inventory.includes(itemId)) {
+                coins -= item.price;
+                inventory.push(itemId);
+                
+                localStorage.setItem('coins', coins);
+                localStorage.setItem('inventory', JSON.stringify(inventory));
+                
+                showNotification('구매 완료!');
+                
+                updateCoinDisplay();
+                renderShopItems();
+                renderInventory();
+            } else if (inventory.includes(itemId)) {
+                showNotification('이미 보유중인 아이템입니다.');
+            } else {
+                showNotification('코인이 부족합니다!');
+            }
+        }
+
+        // 아이템 장착
+        function equipItem(itemId, type) {
+            if (isEquipped(itemId)) {
+                equipped[type] = null;
+            } else {
+                equipped[type] = itemId;
+            }
+
+            localStorage.setItem('equipped', JSON.stringify(equipped));
+            renderInventory();
+        }
+
+        // 아이템 장착 여부 확인
+        function isEquipped(itemId) {
+            return Object.values(equipped).includes(itemId);
+        }
+
+        // 알림 표시
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 2000);
+        }
+
+        // 페이지 로드 시 초기화
+        initialize();
+    </script>
+</body>
+</html> 
