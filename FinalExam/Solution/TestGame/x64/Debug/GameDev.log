@@ -1,0 +1,13 @@
+﻿  ElfObject.c
+  ElfTime.c
+  Elf2D.c
+  ElfMath.c
+  main.c
+C:\Users\user\Desktop\gimal\GameDev\GameDev\main.c(51,9): warning C4013: '_kbhit'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\user\Desktop\gimal\GameDev\GameDev\main.c(52,19): warning C4013: '_getch'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+C:\Users\user\Desktop\gimal\GameDev\GameDev\main.c(142,31): warning C4244: '함수': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  코드를 생성하고 있습니다...
+  GameDev.cpp
+  TestBuffer.cpp
+  코드를 생성하고 있습니다...
+  GameDev.vcxproj -> C:\Users\user\Desktop\gimal\GameDev\x64\Debug\GameDev.exe
