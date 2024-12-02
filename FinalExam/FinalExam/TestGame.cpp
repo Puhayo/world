@@ -1,8 +1,34 @@
-#include <stdio.h>
+﻿#include <stdio.h>
 #include <conio.h> // Windows 환경에서 getch 사용을 위한 헤더파일
 #include <stdlib.h>
 #include <time.h>
 
+// 초기화 함수
+void Initialize() {
+    printf("게임 초기화 중...\n");
+}
+
+// 렌더링 함수
+void Render() {
+    printf("화면을 렌더링 중...\n");
+
+}
+
+// 업데이트 함수 (입력 처리 포함)
+void Update() {
+    if (_kbhit()) { // 키가 눌렸는지 확인
+        char key = _getch(); // 키 입력을 받음
+        printf("입력된 키: %c\n", key);
+
+        // 키에 따른 동작 추가 가능
+        if (key == 'q') {
+            printf("게임 종료...\n");
+            exit(0); // 'q'를 입력하면 게임 종료
+        }
+    }
+}
+
+// 메인 게임 루프
 void GameLoop() {
     Initialize();
 
